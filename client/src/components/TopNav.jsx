@@ -6,7 +6,7 @@ const TopNav = ({darkMode, toggleMode}) => {
   return (
     <div>
       <button onClick={toggleMode}>
-        {darkMode ? <FontAwesomeIcon icon={faSun} />: "dark"}
+        {darkMode ? "light": "dark"}
         
       </button>
       

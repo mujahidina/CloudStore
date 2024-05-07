@@ -23,7 +23,7 @@ const App = () => {
     <Router>
       <div className={`grid grid-cols-5 gap-4 w-full h-screen ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         <div className='w-[140px] ml-3'>
-          <SideNav />
+          <SideNav darkMode={darkMode} toggleMode={toggleMode}/>
         </div>
         <div className='grid grid-cols-1 col-span-4 w-full h-screen gap-4'>
           <div>

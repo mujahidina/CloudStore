@@ -2,7 +2,7 @@ import React from 'react'
 
 const App = () => {
   return (
-    <div>Hello React</div>
+    <div>Hello CloudStore</div>
   )
 }
 

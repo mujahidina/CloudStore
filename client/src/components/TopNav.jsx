@@ -1,8 +1,16 @@
 import React from 'react'
 
-const TopNav = () => {
+
+
+const TopNav = ({darkMode, toggleMode}) => {
   return (
-    <div>TopNav</div>
+    <div>
+      <button onClick={toggleMode}>
+        {darkMode ? "light": "dark"}
+        
+      </button>
+      
+    </div>
   )
 }
 

@@ -1,5 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { FaPlus } from "react-icons/fa6";
+import { IoHome } from "react-icons/io5";
+import { MdPeopleAlt } from "react-icons/md";
+import { CiClock2 } from "react-icons/ci";
+import { FaRegStar } from "react-icons/fa";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { IoIosCloud } from "react-icons/io";
 
 
 const SideNav = ({darkMode, toggleMode}) => {
@@ -12,20 +19,20 @@ const SideNav = ({darkMode, toggleMode}) => {
       </h1>
       </div>
       <div className='flex w-full items-center justify-start'>
-        <button className={`flex items-center mt-4 justify-start ${darkMode ? 'dark-mode3' : 'light-mode2'} rounded-2xl w-[111px] p-4 `}>New</button>
+        <button className={`flex items-center mt-4 justify-start ${darkMode ? 'dark-mode3' : 'light-mode2'} rounded-2xl w-[111px] p-4 shadow-md`}><FaPlus size={20} className='mr-4'/>New</button>
       </div>
-      <div className='flex items-center  h-screen mt-6 ml-9 justify-start flex-col gap-3 w-full'>
+      <div className='flex items-center  h-screen mt-6  justify-start flex-col gap-3 w-full'>
         <div className='w-full flex gap-2 flex-col'>
-         <div className='flex cursor-pointer items-center justify-start w-full '><Link className='navbar p-1.5' to="/">Home</Link></div> 
-         <div className='flex cursor-pointer items-center justify-start w-full '><Link className="navbar p-1.5" to="/">Shared with me</Link></div> 
-         <div className='flex cursor-pointer items-center justify-start w-full '><Link className="navbar p-1.5" to="/">Recent</Link></div> 
+         <div className=' justify-start w-full '><Link className='navbar p-1.5 flex cursor-pointer items-center' to="/"><IoHome size={20} className='mr-4 '/>Home</Link></div> 
+         <div className='justify-start w-full '><Link className="navbar p-1.5 flex cursor-pointer items-center" to="/shared"><MdPeopleAlt size={20} className='mr-4 '/>Shared with me</Link></div> 
+         <div className='justify-start w-full '><Link className="navbar p-1.5 flex cursor-pointer items-center" to="/recent"><CiClock2 size={20} className='mr-4 '/>Recent</Link></div> 
          </div>
          <div className='flex w-full  flex-col mt-7'>
-         <div className='flex cursor-pointer items-center justify-start w-full '><Link className='navbar p-1.5' to="/">Starred</Link></div> 
+         <div className='justify-start w-full '><Link className='navbar p-1.5 flex cursor-pointer items-center' to="/starred"><FaRegStar size={20} className='mr-4'/>Starred</Link></div> 
          </div>
          <div className='flex w-full flex-col gap-2 mt-4'>
-         <div className='flex cursor-pointer items-center justify-start w-full '><Link className=" navbar p-1.5" to="/">Trash</Link></div> 
-         <div className='flex cursor-pointer items-center justify-start w-full '><Link className=" navbar p-1.5" to="/">Storage</Link></div> 
+         <div className='justify-start w-full '><Link className=" navbar p-1.5 flex cursor-pointer items-center" to="/trash"><FaRegTrashAlt size={20} className='mr-4'/>Trash</Link></div> 
+         <div className='justify-start w-full '><Link className=" navbar p-1.5 flex cursor-pointer items-center" to="/storage"><IoIosCloud size={20} className='mr-4'/>Storage</Link></div> 
          </div>
       </div>
 

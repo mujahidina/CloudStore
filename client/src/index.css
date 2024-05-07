@@ -7,8 +7,14 @@
       @apply bg-neutral-900 text-white;
       
     }
+    .light-mode{
+      @apply bg-slate-50
+    }
     .light-mode2{
-        @apply bg-neutral-100;
+        @apply bg-white;
+    }
+    .light-mode3{
+      @apply bg-indigo-50
     }
     .dark-mode2{
         @apply bg-neutral-950

@@ -1,8 +1,15 @@
 import React from 'react'
+// import { CiLight } from "react-icons/ci";
 
-const TopNav = () => {
+// import { MdDarkMode } from "react-icons/md";
+
+const TopNav = ({darkMode, toggleMode}) => {
   return (
-    <div>TopNav</div>
+    <div>
+      <button onClick={toggleMode}>
+        {darkMode ? "light" : "dark"}
+      </button>
+    </div>
   )
 }
 

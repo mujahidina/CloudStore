@@ -15,7 +15,7 @@ const SideNav = ({darkMode, toggleMode}) => {
       <div className='flex items-center justify-start w-full  text-xl mt-3'>
         <img src='src/assets/drive.png' className='w-11 mr-3 h-11'/>
       <h1>
-        Drive
+        CloudStore
       </h1>
       </div>
       <div className='flex w-full items-center justify-start'>

@@ -7,10 +7,28 @@
       @apply bg-neutral-900 text-white;
       
     }
+    .light-mode{
+      @apply bg-slate-50
+    }
     .light-mode2{
-        @apply bg-neutral-100;
+        @apply bg-white;
+    }
+    .light-mode3{
+      @apply bg-indigo-50
     }
     .dark-mode2{
         @apply bg-neutral-950
     }
+    .dark-mode3{
+      @apply bg-neutral-800
   }
+  }
+
+  .navbar:hover{
+    background-color:rgb(61, 59, 59);
+    border:none;
+    border-radius: 50px;
+    width:100%;
+    
+  }
+  

@@ -1,0 +1,57 @@
+.recent-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .toolbar {
+    background-color: #f5f5f5;
+    padding: 10px 0;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .filter-bar,
+  .sort-bar {
+    flex: 1;
+    margin: 0 10px;
+  }
+  
+  .filter-bar select,
+  .sort-bar select {
+    padding: 8px;
+    width: 100%;
+  }
+  
+  .recent-list {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .recent-item {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* Adjust number of columns */
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .recent-item:last-child {
+    border-bottom: none;
+  }
+  
+  .recent-item div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 5px;
+    border-right: 1px solid #ccc;
+  }
+  
+  .recent-item div:last-child {
+    border-right: none;
+  }
+  

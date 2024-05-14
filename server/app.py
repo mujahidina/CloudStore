@@ -5,8 +5,8 @@ from models import db, User, File, Folder,Share
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token,unset_jwt_cookies
 from flask_cors import CORS, cross_origin
 from flask_bcrypt import Bcrypt
-from cloudinary.uploader import upload
-from cloudinary.utils import cloudinary_url
+# from cloudinary.uploader import upload
+# from cloudinary.utils import cloudinary_url
 
 
 

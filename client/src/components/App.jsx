@@ -39,7 +39,7 @@ const App = () => {
   return (
     <Router>
       {isAuthenticated ?  
-        <div className={`grid grid-cols-5 gap-4 w-full h-screen ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+        <div className={`grid fixed grid-cols-5 gap-4 w-full h-screen ${darkMode ? 'dark-mode' : 'light-mode'}`}>
           <div className='w-[180px] ml-3'>
             <SideNav darkMode={darkMode} toggleMode={toggleMode}/>
           </div>
@@ -66,7 +66,7 @@ const App = () => {
       : 
         <div>
           <Routes>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/" element={<Auth />} />
             <Route path="/signup" element={<Signup />} />
             <Route path='/login' element={<Login handleAuth={handleAuth} />} /> {/* Pass handleAuth as a prop */}
           </Routes>

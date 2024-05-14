@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; 
 import Recent from './Recent';
 import SearchBar from './SearchBar';
 import Trash from './Trash';
@@ -15,6 +15,8 @@ import Shared from './Shared'
 import Auth from './Auth'
 import Signup from './Signup';
 import Login from './Login';
+import {jwtDecode} from 'jwt-decode'
+
 
 
 const App = () => {
@@ -29,17 +31,27 @@ const App = () => {
   }
 
   //keeping the user authenticated through page refresh
+  const token=sessionStorage.getItem('token');
   useEffect(()=>{
-    const token=sessionStorage.getItem('token');
+    
+   
     if (token){
       setIsAuthenticated(true)
     }
   },[])
+ 
+  const decoded=jwtDecode(token)
+  console.log(decoded)
+
+  const decodeHandler= jwtDecode(token, {header:true});
+  console.log(decodeHandler)
+
+  
 
   return (
     <Router>
       {isAuthenticated ?  
-        <div className={`grid grid-cols-5 gap-4 w-full h-screen ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+        <div className={`grid grid-cols-5 fixed  gap-4 w-full h-screen ${darkMode ? 'dark-mode' : 'light-mode'}`}>
           <div className='w-[180px] ml-3'>
             <SideNav darkMode={darkMode} toggleMode={toggleMode}/>
           </div>
@@ -66,7 +78,7 @@ const App = () => {
       : 
         <div>
           <Routes>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/" element={<Auth />} />
             <Route path="/signup" element={<Signup />} />
             <Route path='/login' element={<Login handleAuth={handleAuth} />} /> {/* Pass handleAuth as a prop */}
           </Routes>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Login = ({ handleAuth }) => {
+const Login = ({ handleAuth}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -49,7 +49,9 @@ const Login = ({ handleAuth }) => {
         return response.json();
       })
       .then((data) => {
+        console.log("User data .................................")
         console.log(data);
+
         sessionStorage.setItem('token', data.token);
       });
   };

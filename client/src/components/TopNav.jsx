@@ -3,7 +3,7 @@ import { IoIosSearch } from "react-icons/io";
 import { MdDarkMode } from "react-icons/md";
 import { CiLight } from "react-icons/ci";
 import Profile from './Profile';
-import { Link } from 'react-router-dom';
+;
 
 
 
@@ -24,11 +24,11 @@ const TopNav = ({darkMode, toggleMode}) => {
         
         
       </button>
-      <Link to='/profile'>
-      <div className='ml-[110px] cursor-pointer shadow-sm mt-3 border rounded-lg p-3 w-[160px] flex items-center justify-center'>
-     
+      
+      <div >
+      <Profile />
       </div>
-      </Link>
+    
       
     </div>
   )

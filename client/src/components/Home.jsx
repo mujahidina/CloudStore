@@ -4,34 +4,27 @@ import { TiTick } from "react-icons/ti";
 import { FaRegFileAlt } from "react-icons/fa";
 import { IoGridOutline } from "react-icons/io5";
 import { FaBars } from "react-icons/fa6";
-import UploadWidget from './UploadWidget';
+// import UploadWidget from './UploadWidget';
 
-const Home = () => {
+
+
+const Home = ({myid}) => {
   const [selectedFiles, setSelectedFiles] = useState(false);
   const [selectedFolders, setSelectedFolders] = useState(false);
   const [gridView, setGridView] = useState(false);
   const [flexView, setFlexView] = useState(true);
   const [folders, setFolders] = useState([]);
-  const [files, setFiles] = useState([]);
+ 
   
+useEffect(() => {
+  fetch(`http://127.0.0.1:5555/foldersuser/${myid}`)
+   .then((response) => response.json())
+   .then((data) => {
+      console.log(data);
+      setFolders(data);
+    })},[]);
 
-  // useEffect(() => {
-  //   fetch(`http://127.0.0.1:5555/foldersuser/${id}`)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       console.log(data);
-  //       setFolders(data);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   fetch('http://127.0.0.1:5555/files')
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       console.log(data);
-  //       setFiles(data);
-  //     });
-  // }, []);
+  
 
   const handleToggleFiles = () => {
     setSelectedFiles(true);
@@ -60,7 +53,7 @@ const Home = () => {
         <h1>Suggested</h1>
         <div className='flex w-[200px] mr-[300px] border p-1 items-center rounded-full'>
           <div onClick={handleToggleFiles} className='ml-1 flex items-center w-full border-r border-black'>
-            {selectedFiles ? <TiTick /> : <FaRegFileAlt size={15} className='mr-2'/>}Files
+            {selectedFiles ? <TiTick /> : <FaRegFileAlt size={15} className='mr-2'/>}<button >Files</button>
           </div>
           <div onClick={handleToggleFolders} className='ml-5 flex items-center w-full mr-2'>
             {selectedFolders ? <TiTick /> : <MdFolderOpen size={20} className='mr-2'/>}Folders
@@ -74,36 +67,26 @@ const Home = () => {
             {gridView ? <TiTick /> : ''}<IoGridOutline size={20}/>
           </div>
         </div>
+       
       </div>
+      
       {selectedFolders ? gridView?
         <div className='grid grid-cols-3 w-full h-full mt-5'>
-          {folders.map(folder => (
-            <div key={folder.id} className='flex w-full mt-5 items-center ml-7'>
-              <h1>{folder.folder_name}</h1>
-            </div> 
-          ))}
+          
+            
         </div> 
          : <div className='flex flex-col w-full h-full mt-5'>
-        {folders.map(folder => (
-          <div key={folder.id} className='flex w-full mt-5 items-center ml-7'>
-            <h1>{folder.folder_name}</h1>
-          </div> 
-        ))}
+        
       </div> :""
       }
 
       {selectedFiles ? gridView?
         <div className='grid grid-cols-3 w-full h-full mt-5'>
-          {files.map(file => (
-            <h1 key={file.id}>{file.filename}</h1> 
-          ))}
+         
         </div> 
         : <div className='flex flex-col w-full h-full mt-5'>
-           <UploadWidget />
-        {files.map(file => (
-          <h1 key={file.id}>{file.filename}</h1> 
-         
-        ))}
+           
+        
       </div> :""
       }
     </div>

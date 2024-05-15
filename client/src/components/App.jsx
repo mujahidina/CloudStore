@@ -17,18 +17,30 @@ import Signup from './Signup';
 import Login from './Login';
 
 
+
+
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const token = sessionStorage.getItem('token');
-  
-  
-  // }
+  const token= localStorage.getItem('token');
   useEffect(() => {
-    if (token && !isAuthenticated) {
+    if (token) {
       setIsAuthenticated(true);
+      console.log('token is set')
     }
-  }, [token, isAuthenticated]);
+    else{
+      console.log('token is not set')
+    }
+  }, [token]);
+  
+  
+
+  const [myid, setMyid] = useState(null);
+  function setId(theid){
+    console.log(theid)
+    setMyid(theid)
+  }
+  
   
   const toggleMode = () => {
     setDarkMode(prevMode => !prevMode);
@@ -37,13 +49,16 @@ const App = () => {
   const handleAuth = () => {
     setIsAuthenticated(!isAuthenticated);
   }
+  const handleLogin = (newToken) => {
+    setToken(newToken);
+  }
 
   return (
     <Router>
       {isAuthenticated ?  
         <div className={`grid grid-cols-5 fixed  gap-4 w-full h-screen ${darkMode ? 'dark-mode' : 'light-mode'}`}>
           <div className='w-[180px] ml-3'>
-            <SideNav darkMode={darkMode} toggleMode={toggleMode}/>
+            <SideNav myid={myid} darkMode={darkMode} toggleMode={toggleMode}/>
           </div>
           <div className='grid grid-cols-1 col-span-4 w-full h-screen gap-4'>
             <div>
@@ -51,9 +66,9 @@ const App = () => {
             </div>
             <div className={`rounded-xl h-[530px] ${darkMode ? 'dark-mode2' : 'light-mode2'} mr-7 flex items-center justify-center`}>
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/new" element={<New />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/" element={<Home myid={myid} />} />
+                <Route path="/new" element={<New myid={myid}/>} />
+                <Route path="/profile" element={<Profile myid={myid} />} />
                 <Route path="/recent" element={<Recent />} />
                 <Route path="/search" element={<SearchBar />} />
                 <Route path="/trash" element={<Trash />} />
@@ -70,7 +85,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Auth />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path='/login' element={<Login isAuthenticated={isAuthenticated} handleAuth={handleAuth} />} /> {/* Pass handleAuth as a prop */}
+            <Route path='/login' element={<Login  handleAuth={handleAuth} onLogin={handleLogin} setId={setId}/>} /> {/* Pass handleAuth as a prop */}
           </Routes>
         </div>
       }

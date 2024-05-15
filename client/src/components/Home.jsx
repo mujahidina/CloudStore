@@ -4,6 +4,7 @@ import { TiTick } from "react-icons/ti";
 import { FaRegFileAlt } from "react-icons/fa";
 import { IoGridOutline } from "react-icons/io5";
 import { FaBars } from "react-icons/fa6";
+import UploadWidget from './UploadWidget';
 
 const Home = () => {
   const [selectedFiles, setSelectedFiles] = useState(false);
@@ -14,23 +15,23 @@ const Home = () => {
   const [files, setFiles] = useState([]);
   
 
-  useEffect(() => {
-    fetch('http://127.0.0.1:5555/folder ')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setFolders(data);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://127.0.0.1:5555/foldersuser/${id}`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log(data);
+  //       setFolders(data);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    fetch('http://127.0.0.1:5555/files')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setFiles(data);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch('http://127.0.0.1:5555/files')
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log(data);
+  //       setFiles(data);
+  //     });
+  // }, []);
 
   const handleToggleFiles = () => {
     setSelectedFiles(true);
@@ -98,8 +99,10 @@ const Home = () => {
           ))}
         </div> 
         : <div className='flex flex-col w-full h-full mt-5'>
+           <UploadWidget />
         {files.map(file => (
           <h1 key={file.id}>{file.filename}</h1> 
+         
         ))}
       </div> :""
       }

@@ -1,40 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import {React} from 'react'
+import {useNavigate} from "react-router-dom"
 
-const Profile = ({ token }) => {
-    const [profile, setProfile] = useState(null);
+
+
+const Profile = () => {
+    const navigate = useNavigate()
+    // const token= sessionStorage.getItem('token')
+
+    const handleLogout=()=>{
+        sessionStorage.clear()
+        navigate('/')
+    }
     
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await fetch('http://127.0.0.1:5555/users/', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+  return (
+    <div>
+        <button onClick={handleLogout}>Logout</button>
+    </div>
+  )
+}
 
-                if (!response.ok) {
-                    throw new Error('Error fetching profile');
-                }
-
-                const data = await response.json();
-                setProfile(data);
-            } catch (error) {
-                console.error('Error fetching profile', error);
-            }
-        };
-
-        if (token) {
-            fetchProfile();
-        }
-    }, [token]);
-
-    return (
-        <div>
-            profile
-        </div>
-    );
-};
-
-export default Profile;
+export default Profile

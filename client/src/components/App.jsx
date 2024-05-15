@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; 
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
 import Recent from './Recent';
 import SearchBar from './SearchBar';
 import Trash from './Trash';
@@ -15,13 +15,21 @@ import Shared from './Shared'
 import Auth from './Auth'
 import Signup from './Signup';
 import Login from './Login';
-import {jwtDecode} from 'jwt-decode'
-
 
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const token = sessionStorage.getItem('token');
+  
+  
+  // }
+  useEffect(() => {
+    if (token && !isAuthenticated) {
+      setIsAuthenticated(true);
+    }
+  }, [token, isAuthenticated]);
+  
   const toggleMode = () => {
     setDarkMode(prevMode => !prevMode);
   }
@@ -29,24 +37,6 @@ const App = () => {
   const handleAuth = () => {
     setIsAuthenticated(!isAuthenticated);
   }
-
-  //keeping the user authenticated through page refresh
-  const token=sessionStorage.getItem('token');
-  useEffect(()=>{
-    
-   
-    if (token){
-      setIsAuthenticated(true)
-    }
-  },[])
- 
-  const decoded=jwtDecode(token)
-  console.log(decoded)
-
-  const decodeHandler= jwtDecode(token, {header:true});
-  console.log(decodeHandler)
-
-  
 
   return (
     <Router>
@@ -59,7 +49,7 @@ const App = () => {
             <div>
               <TopNav darkMode={darkMode} toggleMode={toggleMode}/>
             </div>
-            <div className={` rounded-xl  h-[530px]  ${darkMode ? 'dark-mode2' : 'light-mode2'}  mr-7 flex items-center justify-center`}>
+            <div className={`rounded-xl h-[530px] ${darkMode ? 'dark-mode2' : 'light-mode2'} mr-7 flex items-center justify-center`}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/new" element={<New />} />
@@ -70,7 +60,7 @@ const App = () => {
                 <Route path="/storage" element={<Storage />} />
                 <Route path="/starred" element={<Starred />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/shared" element={<Shared/>} />
+                <Route path="/shared" element={<Shared />} />
               </Routes>
             </div>
           </div>
@@ -80,7 +70,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Auth />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path='/login' element={<Login handleAuth={handleAuth} />} /> {/* Pass handleAuth as a prop */}
+            <Route path='/login' element={<Login isAuthenticated={isAuthenticated} handleAuth={handleAuth} />} /> {/* Pass handleAuth as a prop */}
           </Routes>
         </div>
       }

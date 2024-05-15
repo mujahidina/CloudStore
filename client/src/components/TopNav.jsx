@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { IoIosSearch } from "react-icons/io";
 import { MdDarkMode } from "react-icons/md";
 import { CiLight } from "react-icons/ci";
-// import Profile from './Profile';
-// import { Link } from 'react-router-dom';
+import Profile from './Profile';
+import { Link } from 'react-router-dom';
 
 
 
@@ -24,10 +24,11 @@ const TopNav = ({darkMode, toggleMode}) => {
         
         
       </button>
-
+      <Link to='/profile'>
       <div className='ml-[110px] cursor-pointer shadow-sm mt-3 border rounded-lg p-3 w-[160px] flex items-center justify-center'>
-        {/* <Profile /> */}
+     
       </div>
+      </Link>
       
     </div>
   )

@@ -1,13 +1,18 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode"
 
-const Login = ({ handleAuth}) => {
+
+
+
+
+const Login = ({isAuthenticated, handleAuth}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
-  const token = sessionStorage.getItem('token');
-
+ 
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
@@ -42,6 +47,7 @@ const Login = ({ handleAuth}) => {
           console.log(response);
           alert('Login successful');
           handleAuth(); 
+          
           navigate('/'); 
         } else {
           alert('Failed to login');
@@ -49,10 +55,10 @@ const Login = ({ handleAuth}) => {
         return response.json();
       })
       .then((data) => {
-        console.log("User data .................................")
         console.log(data);
-
         sessionStorage.setItem('token', data.token);
+        const decoded = jwtDecode('token');
+          console.log(decoded);
       });
   };
 

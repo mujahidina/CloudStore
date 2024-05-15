@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, make_response
 from flask_migrate import Migrate
 from flask_restful import Resource, Api, reqparse
-from models import db, User, File, Folder,Share
+from models import db, User, File, Folder,Share,StarredItem,TrashItem
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token,unset_jwt_cookies
 from flask_cors import CORS, cross_origin
 from flask_bcrypt import Bcrypt
@@ -36,6 +36,7 @@ class UserRegister(Resource):
         username = data.get("username")
         email = data.get("email")
         password = str(data.get("password"))
+        image_url = data.get("image_url")
         
         
         print(f"This is {data}")
@@ -61,6 +62,7 @@ class UserRegister(Resource):
            username = username,
            email = email,
            password = hashed_password,
+           image_url = image_url
             
         )
         db.session.add(new_user)
@@ -120,7 +122,7 @@ api.add_resource(Logout,"/user/logout")
 
 class Users(Resource):
     def get(self):
-        users = [user.to_dict(only=('id', 'username', 'email',)) for user in User.query.all()]
+        users = [user.to_dict(only=('id', 'username', 'email',"image_url")) for user in User.query.all()]
         print("im a user", users)
         return make_response(jsonify(users),200)
     
@@ -132,16 +134,16 @@ class UserByID(Resource):
         user = User.query.filter(User.id==id).first()
 
         if user:
-            return make_response(jsonify(user.to_dict(only=("id","username","email",))),200) 
+            return make_response(jsonify(user.to_dict(only=("id","username","email","image_url"))),200) 
 
     def patch(self,id):
 
-        data = request.get_json()[0]
+        data = request.get_json()
 
         user = User.query.filter(User.id==id).first()
 
         for attr in data:
-            setattr(user,attr,data.get(attr))
+            setattr(user,attr,data.get(attr)) 
 
         db.session.add(user)
         db.session.commit()
@@ -159,17 +161,11 @@ class UserByID(Resource):
         else:
             return make_response(jsonify({"error":"User not found"}),404) 
         
-api.add_resource(UserByID,"/users/<int:id>")     
+api.add_resource(UserByID,"/users/<int:id>")    
 
 class Folders(Resource):
-    # @jwt_required()
-    def get(self):
-        folders = [folder.to_dict(only=("id","folder_name","user_id","user.username")) for folder in Folder.query.all()]       
-        
-        return make_response(folders,200)
-    
-    def post(self):
-        data =  request.get_json()[0]
+     def post(self):
+        data =  request.get_json()
         
        
         
@@ -187,8 +183,17 @@ class Folders(Resource):
             return make_response(jsonify({"error":["validation errors"]}))    
         
         return make_response(new_folder.to_dict(only=("parent_folder_id","user_id","user.username","folder_name")),201)
+api.add_resource(Folders,"/folders")     
+
+class FolderByUser(Resource):
     
-api.add_resource(Folders,"/folders")
+    def get(self,id):
+        folders = [folder.to_dict(only=("id","folder_name","user_id","user.username")) for folder in Folder.query.filter(Folder.user_id==id)]       
+        
+        return make_response(folders,200)
+    
+   
+api.add_resource(FolderByUser,"/foldersuser/<int:id>")
 
 class FolderByID(Resource):
     
@@ -202,7 +207,7 @@ class FolderByID(Resource):
         
     def patch(self,id):
 
-        data = request.get_json()[0]
+        data = request.get_json()
 
         folder = Folder.query.filter(Folder.id==id).first()
 
@@ -280,13 +285,10 @@ api.add_resource(FolderByID,"/folders/<int:id>")
 # api.add_resource(FolderByID,"/folders/<int:id>")
 
 class Files(Resource):
-    def get(self):
-        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.all()]       
-        
-        return make_response(files,200)
+    
     
     def post(self):
-        data = request.get_json()[0]
+        data = request.get_json()
         
         # Handle file upload to Cloudinary
         uploaded_file = upload(data.get('file'))  # Assuming the file is in the 'file' field of the JSON payload
@@ -313,6 +315,25 @@ class Files(Resource):
     
 api.add_resource(Files,"/files")  
 
+class FileByFolder(Resource):
+    def get(self,id):
+        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.folder_id==id)]
+               
+        
+        return make_response(files,200)
+    
+api.add_resource(FileByFolder,"/filefolder/<int:id>")    
+
+class FileByUser(Resource):
+    def get(self,id):
+        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.user_id==id)]
+               
+        
+        return make_response(files,200)
+    
+api.add_resource(FileByUser,"/fileuser/<int:id>")    
+    
+ 
 class FileByID(Resource):
     
     def get(self,id):
@@ -325,7 +346,7 @@ class FileByID(Resource):
         
     def patch(self,id):
 
-        data = request.get_json()[0]
+        data = request.get_json()
 
         file = File.query.filter(File.id==id).first()
 
@@ -371,7 +392,7 @@ class Shares(Resource):
         return make_response(shares,200)
     
     def post(self):
-        data =  request.get_json()[0]
+        data =  request.get_json()
         
        
         
@@ -404,7 +425,7 @@ class ShareByID(Resource):
         
     def patch(self,id):
 
-        data = request.get_json()[0]
+        data = request.get_json()
 
         share = Share.query.filter(Share.id==id).first()
 
@@ -424,12 +445,93 @@ class ShareByID(Resource):
             db.session.commit()
             return make_response("",204)
         else:
-            return make_response(jsonify({"error":"User not found"}),404)
+            return make_response(jsonify({"error":"Shared file not found"}),404)
         
         
 api.add_resource(ShareByID,"/shares/<int:id>")     
+
+
+class StarredItems(Resource):
+    def get(self):
+        starred_items= [starred.to_dict() for starred in StarredItem.query.all()]
+        return make_response(starred_items,200)
+    
+    def post(self):
+        data =  request.get_json()[0]
+        
+       
+        
+        try:
+            starred_item = StarredItem(
+                file_id = data.get("file_id"),
+                item_type = data.get("item_type"),
+                user_id = data.get("user_id")
+                
+            )  
+            db.session.add(starred_item)
+            db.session.commit() 
+            
+        except ValueError:
+            return make_response(jsonify({"error":["validation errors"]}))    
+        
+        return make_response(starred_item.to_dict(only=("id","file_id","item_type","user_id")),201)
+    
+api.add_resource(StarredItems,"/starreditems")   
+
+class StarredItemByID(Resource):
+   def delete(self,id):
+        starred_item = StarredItem.query.filter(StarredItem.id==id).first()
+
+        if starred_item:
+            db.session.delete(starred_item)
+            db.session.commit()
+            return make_response("",204)
+        else:
+            return make_response(jsonify({"error":"Item not found"}),404)
+        
+api.add_resource(StarredItemByID,"/starreditem/<int:id>")    
+
+class TrashItems(Resource):
+    def get(self):
+        trash_item = [trash.to_dict() for trash in TrashItem.query.all()]
+        return make_response(trash_item,200)   
+    
+    def post(self):
+        data =  request.get_json()[0]
+        
+       
+        
+        try:
+            trash_item = TrashItem(
+                file_id = data.get("file_id"),
+                item_type = data.get("item_type"),
+                user_id = data.get("user_id")
+                
+            )  
+            db.session.add(trash_item)
+            db.session.commit() 
+            
+        except ValueError:
+            return make_response(jsonify({"error":["validation errors"]}))    
+        
+        return make_response(trash_item.to_dict(only=("id","file_id","item_type","user_id")),201)
+
+api.add_resource(TrashItems,"/trashitems")               
         
         
+class TrashItemByID(Resource):
+    def delete(self,id):
+        trash_item = TrashItem.query.filter(TrashItem.id==id).first()
+
+        if trash_item:
+            db.session.delete(trash_item)
+            db.session.commit()
+            return make_response("",204)
+        else:
+            return make_response(jsonify({"error":"Item not found"}),404)
+        
+api.add_resource(TrashItemByID,"/trashitem/<int:id>")
+            
         
         
                 

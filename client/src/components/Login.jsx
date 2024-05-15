@@ -1,12 +1,15 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Login = ({ handleAuth }) => {
+
+const Login = ({ handleAuth, setId}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
-  const token = sessionStorage.getItem('token');
+  // const token = sessionStorage.getItem('token');
+ 
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -49,10 +52,15 @@ const Login = ({ handleAuth }) => {
         return response.json();
       })
       .then((data) => {
+        // console.log("User data .................................")
         console.log(data);
+        console.log(data.id);
+        setId(data.id);
         sessionStorage.setItem('token', data.token);
       });
   };
+
+  
 
   return (
     <div className="bg-slate-100 w-full h-screen flex items-center justify-center">

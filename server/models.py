@@ -15,6 +15,7 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    image_url = db.Column(db.String(100))
 
     @validates('password')
     def validate_password(self, key, password):
@@ -49,6 +50,9 @@ class File(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('files', lazy=True))
 
+    user = db.relationship('User', foreign_keys=[user_id])
+
+
 class Share(db.Model, SerializerMixin):
     __tablename__ = 'shares'
     id = db.Column(db.Integer, primary_key=True)
@@ -56,7 +60,23 @@ class Share(db.Model, SerializerMixin):
     file_id = db.Column(db.Integer, db.ForeignKey('files.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     shared_with_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
     user = db.relationship('User', foreign_keys=[user_id])
     shared_with_user = db.relationship('User', foreign_keys=[shared_with_user_id])
     file = db.relationship('File', foreign_keys=[file_id])
+
+
+class StarredItem(db.Model,SerializerMixin):
+    __tablename__ = 'starred_items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    file_id = db.Column(db.Integer, db.ForeignKey('files.id'), nullable=False)
+    item_type = db.Column(db.String(50), nullable=False) 
+    user_id = db.Column(db.Integer, nullable=False)   
+
+class TrashItem(db.Model,SerializerMixin):
+    __tablename__ = 'trash_items'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    file_id = db.Column(db.Integer, db.ForeignKey('files.id'), nullable=False)
+    item_type = db.Column(db.String(50), nullable=False)  
+    user_id = db.Column(db.Integer, nullable=False)  

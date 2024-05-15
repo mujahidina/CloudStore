@@ -21,11 +21,11 @@ const TrashBin = () => {
 
     return (
         <div className="trash-bin">
-            {/* Display the trash bin image */}
+            
             <img src={isEmpty ? "https://static.vecteezy.com/system/resources/thumbnails/004/264/039/small/rubbish-trash-recycle-bin-icon-set-free-vector.jpg" : ""} alt="Trash Bin" />
-            {/* Add space */}
+           
             <br />
-            {/* Display message if bin is empty with cool font and style */}
+            
             {isEmpty && <p style={{ fontFamily: 'Arial, sans-serif', fontSize: '24px' }}>OPPS NOTHING TO SEE HERE!!</p>}
         </div>
     );

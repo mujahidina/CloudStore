@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaPlus } from "react-icons/fa6";
 import { IoHome } from "react-icons/io5";
@@ -7,9 +7,15 @@ import { CiClock2 } from "react-icons/ci";
 import { FaRegStar } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoIosCloud } from "react-icons/io";
+import New from './New';
+
 
 
 const SideNav = ({darkMode, toggleMode}) => {
+  const [newItem, setNewItem] = useState(false);
+  const toggleNew = () => {
+   setNewItem(!newItem);
+  }
   return (
     <div className='flex ml-3 flex-col items-center w-full'>
       <div className='flex items-center justify-start w-full  text-xl mt-3'>
@@ -18,8 +24,11 @@ const SideNav = ({darkMode, toggleMode}) => {
         CloudStore
       </h1>
       </div>
-      <div className='flex w-full items-center justify-start'>
-        <button className={`flex items-center mt-4 justify-start ${darkMode ? 'dark-mode3' : 'light-mode2'} rounded-2xl w-[111px] p-4 shadow-md`}><FaPlus size={20} className='mr-4'/>New</button>
+      <div className='flex flex-col w-full items-center justify-start'>
+        <button onClick={toggleNew} className={`flex  items-center mt-4 justify-start ${darkMode ? 'dark-mode3' : 'light-mode2'} rounded-2xl w-[111px] p-4 shadow-md`}><FaPlus size={20} className='mr-4'
+        /> New</button>
+        {!newItem ? <div className={` w-[230px] ml-11 shadow-md mt-[100px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center `}><New /></div> : ""}
+       
       </div>
       <div className='flex items-center  h-screen mt-6  justify-start flex-col gap-3 w-full'>
         <div className='w-full flex gap-2 flex-col'>

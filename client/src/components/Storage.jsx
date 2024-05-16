@@ -1,8 +1,11 @@
 import React from 'react'
+import UploadWidget from './UploadWidget'
 
 const Storage = () => {
   return (
-    <div>Storage</div>
+    <div>
+      <button><UploadWidget /></button>
+    </div>
   )
 }
 

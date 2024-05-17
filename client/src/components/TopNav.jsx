@@ -5,7 +5,8 @@ import { CiLight } from "react-icons/ci";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
-const TopNav = ({darkMode, toggleMode, handleLogout}) => {
+import { IoIosClose } from "react-icons/io";
+const TopNav = ({darkMode, toggleMode, handleLogout, handleUpload}) => {
 
 const [profile, setProfile] = useState(null);
 const userId=sessionStorage.getItem('userId');
@@ -14,6 +15,9 @@ const token=sessionStorage.getItem('token')
 
   const toggleProfile=()=>{
     setUserProfile(!userProfile)
+  }
+  const closeButton=()=>{
+    setUserProfile(false)
   }
  
  
@@ -59,15 +63,17 @@ const token=sessionStorage.getItem('token')
       
       <div onClick={toggleProfile} className={`ml-[100px] cursor-pointer shadow-sm mt-3 border rounded-lg p-3 w-[190px] flex items-center justify-center ${darkMode ? 'dark-mode3' : 'light-mode'}`}>
       <button className='flex ' >
-      {profile && <h1 className='flex w-full items-center'>{profile.email} <CgProfile size={25} className='ml-3' /></h1>} 
+      <CgProfile size={25} className='ml-3' />
       </button>
     </div>
     {userProfile ? <div className={`flex flex-col w-[300px] h-[310px] absolute top-[100px] left-[950px]  shadow-sm border rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode3'} p-3`}>
-       <div className='w-full items-center justify-center flex'><CgProfile size={80}  /></div>
+      <div className='w-full flex'>{profile && <h1 className='flex w-full items-center justify-center ml-7'>{profile.email} </h1>} <button onClick={closeButton}><IoIosClose size={30} className=''/></button></div>
+      <div className='flex w-full items-center justify-center'><h1 className='text-[10px] '>created and managed by cloudinary</h1></div>
+       <div className='w-full items-center mt-5 justify-center flex'><CgProfile onClick={handleUpload} className='cursor-pointer' size={80}  /></div>
        <div className='w-full items-center justify-center flex mt-3 text-2xl'>Hi Felix!</div>
        <div className='flex w-full items-center justify-center mt-2'></div>
-       <div className='flex w-full items-center justify-center mt-5'><button className='border rounded-full p-2 w-[200px] '>Edit your Details</button></div>
-       <div className='flex w-full items-center justify-center mt-6'><button onClick={handleLogout} className='border  rounded-full  p-1 w-[140px]'><span className='flex w-full items-center justify-center'><FiLogOut size={20} className='mr-3'/>Sign Out</span></button></div>
+       <div className='flex w-full items-center justify-center mt-1'><button className='border rounded-full p-2 w-[200px] '>Edit your Details</button></div>
+       <div className='flex w-full items-center justify-center mt-2'><button onClick={handleLogout} className='border  rounded-full  p-1 w-[140px]'><span className='flex w-full items-center justify-center'><FiLogOut size={20} className='mr-3'/>Sign Out</span></button></div>
       </div> : ""}
     
       

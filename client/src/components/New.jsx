@@ -3,13 +3,19 @@ import { IoMdFolderOpen } from "react-icons/io";
 import { MdCreateNewFolder } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
 
-const New = ({darkMode, toggleMode}) => {
+const New = ({darkMode, toggleMode, handleUpload}) => {
   const [addFolder, setAddFolder] = useState(false);
   const [input, setInput] = useState('');
   const [newFolder, setNewFolder] = useState(null);
+  const [newFile, setNewFile]=useState(null)
   const userId=sessionStorage.getItem('userId');
   
-
+  const createNewFile=()=>{
+    opts={
+      method:'POST',
+      headers:{'Content-Type':'application/json'}
+    }
+  }
   const toggleForm = () => {
     setAddFolder(!addFolder);
   };
@@ -51,6 +57,7 @@ const New = ({darkMode, toggleMode}) => {
       .then(data => {
         console.log(data);
         setNewFolder(data);
+        
       })
       .catch(error => {
         console.error('Error creating folder:', error);
@@ -68,8 +75,8 @@ const New = ({darkMode, toggleMode}) => {
           <button type="submit"><MdCreateNewFolder size={25} className='mr-4 text-slate-900'/></button>
         </form> : ""}
       </div>
-      <div className='flex cursor-pointer w-full items-center p-3'><FaFileAlt size={20} className='mr-4'/>File upload</div>
-      <div className='flex cursor-pointer w-full items-center p-3'><IoMdFolderOpen size={20} className='mr-4' /> Folder upload</div>
+      <div className='flex cursor-pointer w-full items-center p-3'><FaFileAlt size={20} className='mr-4 '/><button onClick={handleUpload}>File upload</button></div>
+      <div className='flex cursor-pointer w-full items-center p-3'><IoMdFolderOpen size={20} className='mr-4' /> <button onClick={handleUpload}>Folder upload</button></div>
     </div>
   );
 };

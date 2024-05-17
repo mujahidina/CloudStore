@@ -9,7 +9,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
-
+import { FaRegStar } from "react-icons/fa6";
 const Home = ({ darkMode, toggleMode }) => {
   const [selectedFiles, setSelectedFiles] = useState(false);
   const [selectedFolders, setSelectedFolders] = useState(false);
@@ -67,7 +67,7 @@ const Home = ({ darkMode, toggleMode }) => {
   return (
     <div className='flex flex-col w-full h-full'>
       <div className='flex w-full mt-5 items-center ml-7'><h1 className='text-xl'>Welcome to CloudStore</h1></div>
-      <div className='flex w-full mt-5 justify-between items-center ml-11'>
+      <div className='flex w-full mt-5 justify-between items-center ml-9'>
         <h1>My Items</h1>
         <div className={`flex w-[200px] mr-[300px] ${darkMode ? 'dark-mode3' : 'light-mode3'} p-1 items-center rounded-full`}>
           <div onClick={handleToggleFiles} className='ml-1 flex items-center w-full border-r border-black'>
@@ -94,10 +94,11 @@ const Home = ({ darkMode, toggleMode }) => {
               <TiFolderOpen size={20} className='mr-5 ml-5' /><h1>{folder.folder_name}</h1>
               <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='ml-[130px] cursor-pointer' />
               {options && selectedFolderId === folder.id && (
-                <div className={`w-[230px] flex flex-col gap-9 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
+                <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
                   <div className='flex w-full  '><h1 className='flex justify-between w-full'>Edit</h1> <CiEdit size={15} /></div>
                 <div className='flex w-full  '><h1 className='flex justify-between w-full'>Rename <MdOutlineDriveFileRenameOutline /></h1></div>
                 <div className='flex w-full  '><h1 className='flex justify-between w-full'>Move to trash <FaRegTrashAlt /></h1></div>
+                <div className='flex w-full  '><h1 className='flex justify-between w-full'>Star <FaRegStar /></h1></div>
                 </div>
               )}
             </div>
@@ -113,10 +114,11 @@ const Home = ({ darkMode, toggleMode }) => {
               </div>
               <div className='w-full flex '> <hr className='w-full'/></div>
             {options && selectedFolderId === folder.id && (
-                <div className={`w-[230px] flex flex-col gap-9 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[650px] shadow-md mt-[60px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
+                <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[650px] shadow-md mt-[60px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
                 <div className='flex w-full  '><h1 className='flex justify-between w-full'>Edit</h1> <CiEdit size={15} /></div>
                 <div className='flex w-full  '><h1 className='flex justify-between w-full'>Rename <MdOutlineDriveFileRenameOutline /></h1></div>
                 <div className='flex w-full  '><h1 className='flex justify-between w-full'>Move to trash <FaRegTrashAlt /></h1></div>
+                <div className='flex w-full  '><h1 className='flex justify-between w-full'>Star <FaRegStar /></h1></div>
                 </div>
                 
               )}

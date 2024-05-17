@@ -1,9 +1,84 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { IoMdFolderOpen } from "react-icons/io";
+import { MdCreateNewFolder } from "react-icons/md";
+import { FaFileAlt } from "react-icons/fa";
 
-const New = () => {
+const New = ({darkMode, toggleMode, handleUpload}) => {
+  const [addFolder, setAddFolder] = useState(false);
+  const [input, setInput] = useState('');
+  const [newFolder, setNewFolder] = useState(null);
+  const [newFile, setNewFile]=useState(null)
+  const userId=sessionStorage.getItem('userId');
+  
+  const createNewFile=()=>{
+    opts={
+      method:'POST',
+      headers:{'Content-Type':'application/json'}
+    }
+  }
+  const toggleForm = () => {
+    setAddFolder(!addFolder);
+  };
+
+  const handleInput = (e) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    
+    createFolder();
+  };
+
+  const createFolder = () => {
+    if (!userId) {
+      console.error("User ID is not provided.");
+      return;
+    }
+
+    const opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        folder_name: input,
+        user_id:userId
+      
+      })
+    };
+
+    fetch(`http://127.0.0.1:5555/folders`, opts)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to create folder');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        setNewFolder(data);
+        
+      })
+      .catch(error => {
+        console.error('Error creating folder:', error);
+      });
+  };
   return (
-    <div>New</div>
-  )
-}
+    <div>
+      <div className='flex cursor-pointer w-full items-center p-3' onClick={toggleForm}>
+        <IoMdFolderOpen size={20} className='mr-4' /> Folder
+      </div>
+      <div>
+        {addFolder ? <form onSubmit={handleSubmit} className={`flex border-2 rounded-xl  ${darkMode ? 'dark-mode4' : 'light-mode4'}  w-full`}>
+         
+          <input type='text' value={input} onChange={handleInput} placeholder='folder name' className={`w-full  outline-none rounded-md p-2  `} />
+          <button type="submit"><MdCreateNewFolder size={25} className='mr-4 text-slate-900'/></button>
+        </form> : ""}
+      </div>
+      <div className='flex cursor-pointer w-full items-center p-3'><FaFileAlt size={20} className='mr-4 '/><button onClick={handleUpload}>File upload</button></div>
+      <div className='flex cursor-pointer w-full items-center p-3'><IoMdFolderOpen size={20} className='mr-4' /> <button onClick={handleUpload}>Folder upload</button></div>
+    </div>
+  );
+};
 
-export default New
+export default New;

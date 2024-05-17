@@ -7,7 +7,7 @@ const TrashBin = () => {
         // Simulate fetching trash bin status from the backend
         const fetchTrashBinStatus = async () => {
             try {
-                // Assuming your backend API endpoint for trash bin status is '/api/trash_bin_status'
+               
                 const response = await fetch('/api/trash_bin_status');
                 const data = await response.json();
                 setIsEmpty(data.isEmpty);

@@ -43,6 +43,7 @@ const App = () => {
     },[])
     const handleUpload=()=>{
         widgetRef.current.open();
+        result.info
     }
     
  

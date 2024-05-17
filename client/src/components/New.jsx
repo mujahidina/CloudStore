@@ -7,15 +7,12 @@ const New = ({darkMode, toggleMode, handleUpload}) => {
   const [addFolder, setAddFolder] = useState(false);
   const [input, setInput] = useState('');
   const [newFolder, setNewFolder] = useState(null);
-  const [newFile, setNewFile]=useState(null)
   const userId=sessionStorage.getItem('userId');
-  
-  const createNewFile=()=>{
-    opts={
-      method:'POST',
-      headers:{'Content-Type':'application/json'}
-    }
-  }
+  // const [selectedFile, setSelectedFile] = useState(null);
+  //start of file upload
+
+//end of file upload
+
   const toggleForm = () => {
     setAddFolder(!addFolder);
   };

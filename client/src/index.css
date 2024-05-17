@@ -4,7 +4,7 @@
 
 @layer components {
     .dark-mode {
-      @apply bg-neutral-900 text-white;
+      @apply bg-neutral-900 text-white border-none;
       
     }
     .light-mode{
@@ -16,19 +16,30 @@
     .light-mode3{
       @apply bg-indigo-50
     }
+    .light-mode4{
+      @apply bg-white border-none
+    }
+    .dark-mode4{
+      @apply bg-neutral-600 border-none
+    }
     .dark-mode2{
-        @apply bg-neutral-950
+        @apply bg-neutral-950 border-none;
     }
     .dark-mode3{
-      @apply bg-neutral-800
+      @apply bg-neutral-800 border-none;
+
+      
   }
+
   }
 
   .navbar:hover{
-    background-color:rgb(61, 59, 59);
+    background-color: rgb(238, 242, 255);
     border:none;
     border-radius: 50px;
     width:100%;
+    color:rgb(10, 10, 10);
     
   }
+
   

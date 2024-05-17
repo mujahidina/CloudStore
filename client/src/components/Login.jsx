@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 
-const Login = ({ handleAuth, setId}) => {
+const Login = ({ handleAuth}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -52,11 +52,11 @@ const Login = ({ handleAuth, setId}) => {
         return response.json();
       })
       .then((data) => {
-        // console.log("User data .................................")
-        console.log(data);
-        console.log(data.id);
-        setId(data.id);
+        
         sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('userId', data.id);
+        sessionStorage.setItem('access_token', data.access_token);
+        console.log(data);
       });
   };
 

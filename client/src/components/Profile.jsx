@@ -72,7 +72,7 @@ const Profile = ({ darkMode, toggleMode }) => {
               type="email"
               value={editedEmail}
               onChange={handleEmailChange}
-              className='w-[200px] p-2 border rounded'
+              className='w-[200px] p-2 border outline-none  rounded-lg'
             />
           </div>
         ) : (

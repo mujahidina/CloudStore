@@ -8,6 +8,7 @@ from flask_bcrypt import Bcrypt
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 CORS(app)
@@ -398,6 +399,39 @@ class TrashByUser(Resource):
         return make_response(trash_items, 200)
 
 api.add_resource(TrashByUser, "/trash/<int:user_id>")
+
+
+
+
+# class RecentFolders(Resource):
+#     def get(self, user_id):
+#         today = datetime.utcnow()
+#         yesterday = today - timedelta(days=1)
+#         start_of_week = today - timedelta(days=today.weekday())
+
+#         folders = F.query.filter_by(user_id=user_id).all()
+
+#         recents = {
+#             'Today': [],
+#             'Yesterday': [],
+#             'Earlier this week': [],
+#             'More': []
+#         }
+
+#         for folder in folders:
+#             if folder.created_at >= today.replace(hour=0, minute=0, second=0, microsecond=0):
+#                 recents['Today'].append(folder)
+#             elif folder.created_at >= yesterday.replace(hour=0, minute=0, second=0, microsecond=0):
+#                 recents['Yesterday'].append(folder)
+#             elif folder.created_at >= start_of_week.replace(hour=0, minute=0, second=0, microsecond=0):
+#                 recents['Earlier this week'].append(folder)
+#             else:
+#                 recents['More'].append(folder)
+
+#         return jsonify({category: [folder.serialize() for folder in folders] for category, folders in recents.items()})
+
+# api.add_resource(RecentFolders, '/api/recent/<int:user_id>')
+
 
 
 if __name__ == '__main__':

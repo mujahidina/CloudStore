@@ -104,7 +104,7 @@ const App = () => {
                 <Route path="/" element={<Home darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/new" element={<New darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
                 <Route path="/profile" element={<Profile userId={userId} />} />
-                <Route path="/recent" element={<Recent />} />
+                <Route path="/recent" element={<Recent userId={userId}/>} />
                 <Route path="/search" element={<SearchBar />} />
                 <Route path="/trash" element={<Trash darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
                 <Route path="/storage" element={<Storage handleUpload={handleUpload}/>} />

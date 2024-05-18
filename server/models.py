@@ -4,6 +4,7 @@ from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin 
 from flask_migrate import Migrate
 from sqlalchemy import MetaData
+from datetime import datetime
 
 metadata = MetaData()
 
@@ -38,6 +39,7 @@ class Folder(db.Model, SerializerMixin):
     user = db.relationship('User', backref=db.backref('folders', lazy=True))
     files = db.relationship('File', backref='folder', lazy=True, cascade="all, delete-orphan")
     subfolders = db.relationship('Folder', backref=db.backref('parent_folder', remote_side=[id]), cascade="all, delete-orphan")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class File(db.Model, SerializerMixin):
     __tablename__ = 'files'
@@ -51,6 +53,9 @@ class File(db.Model, SerializerMixin):
     user = db.relationship('User', backref=db.backref('files', lazy=True))
 
     user = db.relationship('User', foreign_keys=[user_id])
+
+
+
 
 
 class Share(db.Model, SerializerMixin):

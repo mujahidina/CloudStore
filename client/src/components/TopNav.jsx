@@ -3,9 +3,11 @@ import { IoIosSearch } from "react-icons/io";
 import { MdDarkMode } from "react-icons/md";
 import { CiLight } from "react-icons/ci";
 import { FiLogOut } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { IoIosClose } from "react-icons/io";
+
+
 const TopNav = ({darkMode, toggleMode, handleLogout, handleUpload}) => {
 
 const [profile, setProfile] = useState(null);
@@ -72,7 +74,7 @@ const token=sessionStorage.getItem('token')
        <div className='w-full items-center mt-5 justify-center flex'><CgProfile onClick={handleUpload} className='cursor-pointer' size={80}  /></div>
        <div className='w-full items-center justify-center flex mt-3 text-2xl'>Hi Felix!</div>
        <div className='flex w-full items-center justify-center mt-2'></div>
-       <div className='flex w-full items-center justify-center mt-1'><button className='border rounded-full p-2 w-[200px] '>Edit your Details</button></div>
+       <div className='flex w-full items-center justify-center mt-1'><Link to='/profile'><button className='border rounded-full p-2 w-[200px] '>Edit your Details</button></Link></div>
        <div className='flex w-full items-center justify-center mt-2'><button onClick={handleLogout} className='border  rounded-full  p-1 w-[140px]'><span className='flex w-full items-center justify-center'><FiLogOut size={20} className='mr-3'/>Sign Out</span></button></div>
       </div> : ""}
     

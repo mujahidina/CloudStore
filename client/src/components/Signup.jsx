@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Signup = () => {
+const Signup = ({handleAuth}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -42,7 +42,8 @@ const Signup = () => {
         if (response.ok) {
           console.log(response);
           alert('Account Created');
-          navigate('/login');
+          handleAuth()
+          navigate('/');
         } else {
           alert('Failed to create account');
         }

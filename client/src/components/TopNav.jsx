@@ -68,7 +68,7 @@ const token=sessionStorage.getItem('token')
     </div>
     {userProfile ? <div className={`flex flex-col w-[300px] h-[310px] absolute top-[100px] left-[950px]  shadow-sm border rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode3'} p-3`}>
       <div className='w-full flex'>{profile && <h1 className='flex w-full items-center justify-center ml-7'>{profile.email} </h1>} <button onClick={closeButton}><IoIosClose size={30} className=''/></button></div>
-      <div className='flex w-full items-center justify-center'><h1 className='text-[10px] '>created and managed by cloudinary</h1></div>
+      <div className='flex w-full items-center justify-center'><h1 className='text-[10px] '>created and managed by CloudStore</h1></div>
        <div className='w-full items-center mt-5 justify-center flex'><CgProfile onClick={handleUpload} className='cursor-pointer' size={80}  /></div>
        <div className='w-full items-center justify-center flex mt-3 text-2xl'>Hi Felix!</div>
        <div className='flex w-full items-center justify-center mt-2'></div>

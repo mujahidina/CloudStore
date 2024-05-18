@@ -34,7 +34,7 @@ const App = () => {
     }, (error, result) => {
       if (!error && result && result.event === "success") {
         console.log('File uploaded successfully: ', result.info);
-        thenUpload(result.info); // Call the thenUpload function
+        thenUpload(result.info); 
       }
     });
   }, []);
@@ -52,8 +52,8 @@ const App = () => {
       body: JSON.stringify({
         url: fileInfo.secure_url,
         public_id: fileInfo.public_id,
-        user_id: userId // Include user_id if needed in the backend
-      }),
+        user_id: userId 
+      })
     })
     .then(response => response.json())
     .then(data => {
@@ -91,15 +91,15 @@ const App = () => {
   return (
     <Router>
       {isAuthenticated ?  
-        <div className={`grid grid-cols-5 fixed gap-4 w-full h-screen ${darkMode ? 'dark-mode' : 'light-mode'}`}>
-          <div className='w-[180px] ml-3'>
-            <SideNav darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode} />
+        <div className={`grid grid-cols-5 fixed  gap-4 w-full h-full ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+          <div className='w-[180px]   ml-3'>
+            <SideNav  darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode} />
           </div>
           <div className='grid grid-cols-1 col-span-4 w-full h-screen gap-4'>
             <div>
               <TopNav darkMode={darkMode} handleUpload={handleUpload} handleLogout={handleLogout} toggleMode={toggleMode} />
             </div>
-            <div className={`rounded-xl h-[530px] ${darkMode ? 'dark-mode2' : 'light-mode2'} mr-7 flex items-center justify-center`}>
+            <div className={`rounded-xl  h-[530px] ${darkMode ? 'dark-mode2' : 'light-mode2'} mr-7 flex items-center justify-center`}>
               <Routes>
                 <Route path="/" element={<Home darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/new" element={<New darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
@@ -119,7 +119,7 @@ const App = () => {
         <div>
           <Routes>
             <Route path="/" element={<Auth />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/signup" element={<Signup handleAuth={handleAuth} />} />
             <Route path='/login' element={<Login handleAuth={handleAuth} />} />
           </Routes>
         </div>

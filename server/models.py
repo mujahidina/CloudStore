@@ -4,7 +4,9 @@ from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin 
 from flask_migrate import Migrate
 from sqlalchemy import MetaData
-from datetime import datetime
+from datetime import datetime, timedelta
+from sqlalchemy import event
+
 
 metadata = MetaData()
 
@@ -29,8 +31,11 @@ class User(db.Model, SerializerMixin):
         if not email.endswith("@gmail.com"):
             raise ValueError("Email is not valid. It should end with @gmail.com")
         return email
+    
 
-class Folder(db.Model, SerializerMixin):
+
+
+class Folder(db.Model):
     __tablename__ = 'folders'
     id = db.Column(db.Integer, primary_key=True)
     folder_name = db.Column(db.String(100), nullable=False)
@@ -40,6 +45,29 @@ class Folder(db.Model, SerializerMixin):
     files = db.relationship('File', backref='folder', lazy=True, cascade="all, delete-orphan")
     subfolders = db.relationship('Folder', backref=db.backref('parent_folder', remote_side=[id]), cascade="all, delete-orphan")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    category = db.Column(db.String(20))  # Add category attribute
+
+    def set_category(self):
+        now = datetime.utcnow()
+        delta = now - self.created_at
+
+        if delta < timedelta(days=1):
+            self.category = 'today'
+        elif delta < timedelta(days=2):
+            self.category = 'yesterday'
+        elif delta < timedelta(days=7):
+            self.category = 'earlier this week'
+        elif delta < timedelta(days=30):
+            self.category = 'earlier this month'
+        elif delta < timedelta(days=365):
+            self.category = 'earlier this year'
+        else:
+            self.category = 'never'
+
+@event.listens_for(Folder, 'before_insert')
+def receive_before_insert(mapper, connection, target):
+    target.set_category()
+
 
 class File(db.Model, SerializerMixin):
     __tablename__ = 'files'

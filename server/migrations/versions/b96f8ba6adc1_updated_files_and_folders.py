@@ -8,6 +8,13 @@ Create Date: 2024-05-18 10:40:49.106887
 from alembic import op
 import sqlalchemy as sa
 
+# revision identifiers, used by Alembic.
+revision = 'c2451ad715dd'
+down_revision = '5a74661a8425'
+branch_labels = None
+depends_on = None
+
+
 
 
 def upgrade():

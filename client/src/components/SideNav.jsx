@@ -17,7 +17,7 @@ const SideNav = ({darkMode, toggleMode , handleUpload}) => {
    setNewItem(!newItem);
   }
   return (
-    <div className='flex ml-3 flex-col items-center w-full'>
+    <div className='flex fixed ml-3 flex-col items-center w-[200px]'>
       <div className='flex items-center justify-start w-full  text-xl mt-3'>
         <img src='src/assets/drive.png' className='w-11 mr-3 h-11'/>
       <h1>

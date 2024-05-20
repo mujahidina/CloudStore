@@ -32,6 +32,10 @@ class UserRegister(Resource):
             email=email,
             password=hashed_password,
             image_url=image_url
+            username=username,
+            email=email,
+            password=hashed_password,
+            image_url=image_url
         )
         db.session.add(new_user)
         db.session.commit()

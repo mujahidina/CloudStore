@@ -19,6 +19,7 @@ const TrashBin = () => {
         fetchTrashBinStatus();
     }, []);
 
+
     return (
         <div className="trash-bin">
             

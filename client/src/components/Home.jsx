@@ -10,8 +10,10 @@ import { CiEdit } from "react-icons/ci";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa6";
+import { Link } from 'react-router-dom';
 
-const Home = ({ darkMode, toggleMode }) => {
+const Home = ({ darkMode, toggleMode, handleUpload}) => {
+
   const [selectedFiles, setSelectedFiles] = useState(false);
   const [selectedFolders, setSelectedFolders] = useState(false);
   const [gridView, setGridView] = useState(false);
@@ -33,7 +35,8 @@ const Home = ({ darkMode, toggleMode }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ trashed: true }) // Assuming you have a trashed field in your database schema
+      body: JSON.stringify({ trashed: true })
+      
     })
     .then(response => response.json())
     .then(data => {
@@ -170,10 +173,12 @@ const Home = ({ darkMode, toggleMode }) => {
                   <button onClick={handleCancelClick}>Cancel</button>
                 </div>
               ) : (
+                <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
                 <div className='flex  w-full items-center '>
                   <h1 className='w-full'>{folder.folder_name}</h1>
                   <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
                 </div>
+                </Link>
               )}
               {options && selectedFolderId === folder.id && !editFolderId && (
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>

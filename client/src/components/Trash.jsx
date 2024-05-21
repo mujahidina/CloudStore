@@ -5,7 +5,7 @@ import { IoGridOutline } from "react-icons/io5";
 import { FaBars } from "react-icons/fa6";
 
 
-const Trash = ({darkMode, toggleMode}) => {
+const Trash = ({darkMode}) => {
   const [gridView, setGridView] = useState(false);
   const [flexView, setFlexView] = useState(true);
 

@@ -15,13 +15,16 @@ import Shared from './Shared';
 import Auth from './Auth';
 import Signup from './Signup';
 import Login from './Login';
+import FolderData from './FolderData';
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
   const token = sessionStorage.getItem('token');
   const userId = sessionStorage.getItem('userId');
+  const[cloudinaryRes, setCloudinaryRes] = useState(null);
   console.log('this is my user id', userId);
+
 
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
@@ -34,6 +37,7 @@ const App = () => {
     }, (error, result) => {
       if (!error && result && result.event === "success") {
         console.log('File uploaded successfully: ', result.info);
+        setCloudinaryRes(result.info.secure_url);
         thenUpload(result.info); 
       }
     });
@@ -43,26 +47,26 @@ const App = () => {
     widgetRef.current.open();
   };
 
-  const thenUpload = (fileInfo) => {
-    fetch('http://127.0.0.1:5555/files', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        url: fileInfo.secure_url,
-        public_id: fileInfo.public_id,
-        user_id: userId 
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Item submitted', data);
-    })
-    .catch(error => {
-      console.error('Error submitting file', error);
-    });
-  };
+  // const thenUpload = (fileInfo) => {
+  //   fetch('http://127.0.0.1:5555/files', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       url: fileInfo.secure_url,
+  //       public_id: fileInfo.public_id,
+  //       user_id: userId 
+  //     })
+  //   })
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     console.log('Item submitted', data);
+  //   })
+  //   .catch(error => {
+  //     console.error('Error submitting file', error);
+  //   });
+  // };
 
   const handleLogout = () => {
     sessionStorage.removeItem('token');
@@ -101,9 +105,9 @@ const App = () => {
             </div>
             <div className={`rounded-xl  h-[530px] ${darkMode ? 'dark-mode2' : 'light-mode2'} mr-7 flex items-center justify-center`}>
               <Routes>
-                <Route path="/" element={<Home darkMode={darkMode} toggleMode={toggleMode}/>} />
+                <Route path="/" element={<Home darkMode={darkMode} toggleMode={toggleMode} handleUpload={handleUpload}/>} />
                 <Route path="/new" element={<New darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
-                <Route path="/profile" element={<Profile userId={userId} darkMode={darkMode} toggleMode={toggleMode}/>} />
+                <Route path="/profile" element={<Profile userId={userId} darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode} ImageUrl={cloudinaryRes}/> } />
                 <Route path="/recent" element={<Recent />} />
                 <Route path="/search" element={<SearchBar />} />
                 <Route path="/trash" element={<Trash darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
@@ -111,6 +115,7 @@ const App = () => {
                 <Route path="/starred" element={<Starred darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/shared" element={<Shared />} />
+                <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} fileUrl={cloudinaryRes} />} />
               </Routes>
             </div>
           </div>

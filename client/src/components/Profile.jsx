@@ -7,6 +7,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const userId = sessionStorage.getItem('userId');
   const [imageUpload, setImageUpload] = useState(false);
+  
 
   const handleImageUpload = () => {
     fetch(`http://127.0.0.1:5555/users/${userId}`, {
@@ -15,7 +16,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        image_url: ImageUrl,
+        image_url: ImageUrl.secure_url,
       })
     })
     .then(response => response.json())
@@ -92,17 +93,20 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
             <CgProfile className='cursor-pointer' size={80} />
           )}
         </div>
+        <div className='flex w-full items-center justify-center'>
         
-        <form className='flex w-full items-center justify-center'>
-          <div onClick={handleUpload} className='flex w-[125px] rounded-full'>
+        <form className={`flex w-[160px] mt-5 text-sm  border rounded-lg  ${darkMode ? 'dark-mode4' : 'light-mode'} items-center justify-center`}>
+          <div onClick={handleUpload}  className={`flex cursor-pointer mr-2 ml-2   `}>
             <input
               type='text'
               placeholder='Upload image'
-              className='w-full h-full mt-5 rounded-full p-2 ml-2 justify-center outline-none cursor-pointer flex items-center'
+              className='w-full hidden h-full mt-5 rounded-lg p-2 ml-2 justify-center outline-none cursor-pointer items-center'
             />
+            Change Picture
           </div>
-          <button className='p-1 flex items-center justify-center' onClick={handleImageUpload}>Save</button>
+          <button className=' p-1 mr-2 border-l-2 mt-1 mb-1 flex items-center justify-center' onClick={handleImageUpload}>Save</button>
         </form>
+        </div>
         
         <div className='w-full items-center justify-center flex mt-3 text-2xl'>Hi {profile && profile.username}!</div>
         

@@ -100,7 +100,7 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
           <div className='flex w-full items-center justify-center mt-2' />
           <div className='flex w-full items-center justify-center mt-1'>
             <Link to='/profile'>
-              <button className='border rounded-full p-2 w-[200px]'>Edit your Details</button>
+              <button onClick={closeButton} className='border rounded-full p-2 w-[200px]'>Edit your Details</button>
             </Link>
           </div>
           <div className='flex w-full items-center justify-center mt-2'>

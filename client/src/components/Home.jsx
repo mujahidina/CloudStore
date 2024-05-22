@@ -157,9 +157,9 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
       </div>
 
       {selectedFolders ? gridView ?
-        <div className='grid overflow-y-auto  ml-9 mr-9 gap-x-5 grid-cols-3 w-[940px] gap-y-8 mt-5'>
+        <div className='grid overflow-y-auto   ml-9 mr-9 gap-x-5 grid-cols-3 w-[940px] gap-y-8 mt-5'>
           {folders.map(folder => (
-            <div key={folder.id} className={`flex w-full h-[50px] rounded-xl  items-center ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer`}>
+            <div key={folder.id} className={`flex w-full h-[50px] justify-between rounded-xl  items-center ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer`}>
               <TiFolderOpen size={20} className='mr-5 ml-5' />
               {editFolderId === folder.id ? (
                 <div className='flex w-full '>
@@ -173,12 +173,14 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
                   <button onClick={handleCancelClick}>Cancel</button>
                 </div>
               ) : (
-                <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
-                <div className='flex  w-full items-center '>
+                
+                <div className='flex  w-full justify-between   items-center '>
+                  <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
                   <h1 className='w-full'>{folder.folder_name}</h1>
+                  </Link>
                   <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
                 </div>
-                </Link>
+               
               )}
               {options && selectedFolderId === folder.id && !editFolderId && (
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
@@ -193,7 +195,7 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
         :
         <div className='flex overflow-y-auto h-full flex-col w-full  mt-5'>
           {folders.map(folder => (
-            <div key={folder.id} className='flex  flex-col w-[940px] mb-5 justify-between ml-9 mr-9 items-center'>
+            <div key={folder.id} className='flex  flex-col w-[940px] mb-5  ml-9 mr-9 items-center'>
               <div className='flex w-[940px] mb-5 justify-between ml-9 mr-9 items-center'>
                 <TiFolderOpen size={20} className='mr-5' />
                 {editFolderId === folder.id ? (
@@ -208,10 +210,12 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
                     <button className='mr-9' onClick={handleCancelClick}>Cancel</button>
                   </div>
                 ) : (
-                  <div className='flex items-center '>
-                    <h1 className='flex justify-start'>{folder.folder_name}</h1>
-                    <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='ml-[130px] cursor-pointer' />
-                  </div>
+                  <div className='flex  w-full justify-between   items-center '>
+                  <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
+                  <h1 className='w-full'>{folder.folder_name}</h1>
+                  </Link>
+                  <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
+                </div>
                 )}
               </div>
               <div className='w-full flex'>

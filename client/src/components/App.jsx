@@ -37,7 +37,7 @@ const App = () => {
     }, (error, result) => {
       if (!error && result && result.event === "success") {
         console.log('File uploaded successfully: ', result.info);
-        setCloudinaryRes(result.info.secure_url);
+        setCloudinaryRes(result.info);
         thenUpload(result.info); 
       }
     });
@@ -115,7 +115,7 @@ const App = () => {
                 <Route path="/starred" element={<Starred darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/shared" element={<Shared />} />
-                <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} fileUrl={cloudinaryRes} />} />
+                <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} darkMode={darkMode} toggleMode={toggleMode} fileUrl={cloudinaryRes} />} />
               </Routes>
             </div>
           </div>

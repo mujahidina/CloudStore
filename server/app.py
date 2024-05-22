@@ -95,6 +95,7 @@ class UserLogin(Resource):
             "id": user.id,
             "email": user.email,
             "access_token": user.access_token, 
+            "image_url":user.image_url
         
         })
         
@@ -141,7 +142,7 @@ class UserByID(Resource):
         db.session.add(user)
         db.session.commit()
 
-        return make_response(user.to_dict(only=("id","email","username","files","folders",)),200)
+        return make_response(user.to_dict(only=("id","email","image_url","username","files","folders",)),200)
 
     def delete(self,id):
 

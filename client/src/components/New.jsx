@@ -13,6 +13,7 @@ const New = ({ darkMode, handleUpload }) => {
   const toggleForm = () => {
     setAddFolder(!addFolder);
   };
+  
 
   const handleInput = (e) => {
     setInput(e.target.value);
@@ -21,6 +22,8 @@ const New = ({ darkMode, handleUpload }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createFolder();
+    // Toggle off the form after submitting
+    toggleForm();
   };
 
   const createFolder = () => {
@@ -85,6 +88,7 @@ const New = ({ darkMode, handleUpload }) => {
 
   return (
     <div>
+     
       <div className='flex cursor-pointer w-full items-center p-3' onClick={toggleForm}>
         <IoMdFolderOpen size={20} className='mr-4' /> Folder
       </div>

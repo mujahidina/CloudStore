@@ -10,9 +10,11 @@ import { CiEdit } from "react-icons/ci";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa6";
+import { Link } from 'react-router-dom';
 
-const Home = ({ darkMode, toggleMode }) => {
-  const [selectedFiles, setSelectedFiles] = useState(false);
+const Home = ({ darkMode, toggleMode, handleUpload}) => {
+
+  const [selectedFiles, setSelectedFiles] = useState(true);
   const [selectedFolders, setSelectedFolders] = useState(false);
   const [gridView, setGridView] = useState(false);
   const [flexView, setFlexView] = useState(true);
@@ -33,7 +35,8 @@ const Home = ({ darkMode, toggleMode }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ trashed: true }) // Assuming you have a trashed field in your database schema
+      body: JSON.stringify({ trashed: true })
+      
     })
     .then(response => response.json())
     .then(data => {
@@ -46,18 +49,15 @@ const Home = ({ darkMode, toggleMode }) => {
     });
   };
 
-
   useEffect(() => {
+    // Fetch folders
     fetch(`http://127.0.0.1:5555/foldersuser/${userId}`)
       .then((response) => response.json())
       .then((data) => {
         setFolders(data);
       });
-  }, [userId]);
 
-  
-
-  useEffect(() => {
+    // Fetch files
     fetch(`http://127.0.0.1:5555/fileuser/${userId}`)
       .then((response) => response.json())
       .then((data) => {
@@ -131,32 +131,32 @@ const Home = ({ darkMode, toggleMode }) => {
   return (
     <div className='flex  flex-col w-full h-full'>
       <div className=''>
-      <div className='flex  w-full mt-5 items-center ml-7'><h1 className='text-xl'>Welcome to CloudStore</h1></div>
-      <div className='flex w-full mt-5 justify-between items-center ml-9'>
-        <h1>My Items</h1>
-        <div className={`flex w-[200px] mr-[300px] ${darkMode ? 'dark-mode3' : 'light-mode3'} p-1 items-center rounded-full`}>
-          <div onClick={handleToggleFiles} className='ml-1 flex items-center w-full border-r border-black'>
-            {selectedFiles ? <TiTick /> : <FaRegFileAlt size={15} className='mr-2' />}<button>Files</button>
+        <div className='flex  w-full mt-5 items-center ml-7'><h1 className='text-xl'>Welcome to CloudStore</h1></div>
+        <div className='flex w-full mt-5 justify-between items-center ml-9'>
+          <h1>My Items</h1>
+          <div className={`flex w-[200px] mr-[300px] ${darkMode ? 'dark-mode3' : 'light-mode3'} p-1 items-center rounded-full`}>
+            <div onClick={handleToggleFiles} className='ml-1 flex items-center w-full border-r border-black'>
+              {selectedFiles ? <TiTick /> : <FaRegFileAlt size={15} className='mr-2' />}<button>Files</button>
+            </div>
+            <div onClick={handleToggleFolders} className='ml-5 flex items-center w-full mr-2'>
+              {selectedFolders ? <TiTick /> : <MdFolderOpen size={20} className='mr-2' />}Folders
+            </div>
           </div>
-          <div onClick={handleToggleFolders} className='ml-5 flex items-center w-full mr-2'>
-            {selectedFolders ? <TiTick /> : <MdFolderOpen size={20} className='mr-2' />}Folders
+          <div className={`flex w-[100px] mr-[80px] ${darkMode ? 'dark-mode3' : 'light-mode3'} border p-1 items-center rounded-full`}>
+            <div onClick={handleToggleFlex} className='ml-1 flex items-center w-full border-r border-black'>
+              {flexView ? <TiTick /> : ''}<FaBars size={20} />
+            </div>
+            <div onClick={handleToggleGrid} className='justify-center flex items-center w-full mr-2'>
+              {gridView ? <TiTick /> : ''}<IoGridOutline size={20} />
+            </div>
           </div>
         </div>
-        <div className={`flex w-[100px] mr-[80px] ${darkMode ? 'dark-mode3' : 'light-mode3'} border p-1 items-center rounded-full`}>
-          <div onClick={handleToggleFlex} className='ml-1 flex items-center w-full border-r border-black'>
-            {flexView ? <TiTick /> : ''}<FaBars size={20} />
-          </div>
-          <div onClick={handleToggleGrid} className='justify-center flex items-center w-full mr-2'>
-            {gridView ? <TiTick /> : ''}<IoGridOutline size={20} />
-          </div>
-        </div>
-      </div>
       </div>
 
       {selectedFolders ? gridView ?
-        <div className='grid overflow-y-auto  ml-9 mr-9 gap-x-5 grid-cols-3 w-[940px] gap-y-8 mt-5'>
+        <div className='grid overflow-y-auto   ml-9 mr-9 gap-x-5 grid-cols-3 w-[940px] gap-y-8 mt-5'>
           {folders.map(folder => (
-            <div key={folder.id} className={`flex w-full h-[50px] rounded-xl  items-center ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer`}>
+            <div key={folder.id} className={`flex w-full h-[50px] justify-between rounded-xl  items-center ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer`}>
               <TiFolderOpen size={20} className='mr-5 ml-5' />
               {editFolderId === folder.id ? (
                 <div className='flex w-full '>
@@ -170,10 +170,14 @@ const Home = ({ darkMode, toggleMode }) => {
                   <button onClick={handleCancelClick}>Cancel</button>
                 </div>
               ) : (
-                <div className='flex  w-full items-center '>
-                  <h1 className='w-full'>{folder.folder_name}</h1>
+                
+                <div className='flex  w-full justify-between   items-center '>
+                  <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
+                    <h1 className='w-full'>{folder.folder_name}</h1>
+                  </Link>
                   <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
                 </div>
+               
               )}
               {options && selectedFolderId === folder.id && !editFolderId && (
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
@@ -188,7 +192,7 @@ const Home = ({ darkMode, toggleMode }) => {
         :
         <div className='flex overflow-y-auto h-full flex-col w-full  mt-5'>
           {folders.map(folder => (
-            <div key={folder.id} className='flex  flex-col w-[940px] mb-5 justify-between ml-9 mr-9 items-center'>
+            <div key={folder.id} className='flex  flex-col w-[940px] mb-5  ml-9 mr-9 items-center'>
               <div className='flex w-[940px] mb-5 justify-between ml-9 mr-9 items-center'>
                 <TiFolderOpen size={20} className='mr-5' />
                 {editFolderId === folder.id ? (
@@ -203,9 +207,11 @@ const Home = ({ darkMode, toggleMode }) => {
                     <button className='mr-9' onClick={handleCancelClick}>Cancel</button>
                   </div>
                 ) : (
-                  <div className='flex items-center '>
-                    <h1 className='flex justify-start'>{folder.folder_name}</h1>
-                    <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='ml-[130px] cursor-pointer' />
+                  <div className='flex  w-full justify-between   items-center '>
+                    <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
+                      <h1 className='w-full'>{folder.folder_name}</h1>
+                    </Link>
+                    <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
                   </div>
                 )}
               </div>
@@ -227,15 +233,29 @@ const Home = ({ darkMode, toggleMode }) => {
 
       {selectedFiles ? gridView ?
         <div className='grid overflow-y-auto grid-cols-3 w-full ml-7 '>
+          
           {files.map(file => (
-            <div key={file.id} className='flex items-center'><TiFolderOpen size={20} className='mr-5' /><h1>{file.filename}</h1></div>
+            <div key={file.id} className='flex items-center w-full'><img src='/src/assets/file.png' className='w-[30px] h-[30px] '/><h1 className='ml-4'>{file.filename}</h1></div>
           ))}
         </div>
         :
-        <div className='flex overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
+        <div className='flex  overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
+          <div className='flex w-full items-center justify-between'>
+          <h1 className='ml-[80px]'>Name</h1>
+          <h1>File type</h1>
+          <h1 className='mr-[120px]'>Size</h1></div>
           {files.map(file => (
-            <div key={file.id} className='flex items-center'><TiFolderOpen size={20} className='mr-5' /><h1>{file.filename}</h1></div>
+            <div key={file.id} className='flex  flex-col items-center'>
+            <div className='flex p-2   w-full items-center'>
+            <img src='/src/assets/file.png' className='w-[30px] h-[30px]'/>
+            <h1 className='ml-[30px]'>{file.filename}</h1>
+            <h1 className='ml-[80px]'>{file.file_type}</h1>
+            <h1 className='ml-[370px]'>{file.size}</h1>
+            </div>
+             <div className='w-full mr-[140px] flex'><hr className='w-full'/> </div></div>
+            
           ))}
+         
         </div>
         : ""
       }

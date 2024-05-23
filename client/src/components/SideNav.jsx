@@ -13,8 +13,12 @@ import New from './New';
 
 const SideNav = ({darkMode, toggleMode , handleUpload}) => {
   const [newItem, setNewItem] = useState(false);
+  const [bar, setBar]=useState(false)
   const toggleNew = () => {
    setNewItem(!newItem);
+  }
+  const toggleBar=()=>{
+    setBar(!bar)
   }
   return (
     <div className='flex fixed ml-3 flex-col items-center w-[200px]'>
@@ -27,7 +31,8 @@ const SideNav = ({darkMode, toggleMode , handleUpload}) => {
       <div className='flex flex-col w-full items-center justify-start'>
         <button onClick={toggleNew} className={`flex  items-center mt-4 justify-start ${darkMode ? 'dark-mode3' : 'light-mode2'} rounded-2xl w-[111px] p-4 shadow-md`}><FaPlus size={20} className='mr-4'
         /> New</button>
-        {newItem ? <div className={` w-[230px] ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-11 shadow-md mt-[100px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center `}><New handleUpload={handleUpload}/></div> : ""}
+        {newItem ? <div className={` w-[230px] ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-11 shadow-md mt-[100px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center `}>
+          <New toggleBar={toggleBar} handleUpload={handleUpload}/></div> : ""}
        
       </div>
       <div className='flex items-center  h-screen mt-6  justify-start flex-col gap-3 w-full'>

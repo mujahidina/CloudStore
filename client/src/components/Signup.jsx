@@ -56,8 +56,8 @@ const Signup = ({handleAuth}) => {
 
   return (
     <div className="bg-slate-100 w-full h-screen flex items-center justify-center">
-      <div className="bg-white rounded-3xl w-[900px] h-[400px] p-7 grid grid-cols-2">
-        <div className="w-full ml-4 mt-11">
+      <div className="bg-white rounded-3xl w-[900px] h-[300px] p-7 grid grid-cols-2">
+        <div className="w-full ml-6 mt-5">
           <div>
             <img src="/src/assets/drive.png" className="w-11 mr-3 h-11 mb-5" alt="drive" />
           </div>
@@ -67,21 +67,21 @@ const Signup = ({handleAuth}) => {
         </div>
         <form onSubmit={handleSubmit} className="flex items-center justify-center w-full h-full flex-col gap-7">
           <input
-            className="outline-none border border-black p-3 rounded-md w-[350px]"
+            className="outline-none border border-black p-1.5 rounded-md w-[350px]"
             type="text"
             value={username}
             onChange={handleUsername}
             placeholder="Username"
           />
           <input
-            className="outline-none border border-black p-3 rounded-md w-[350px]"
+            className="outline-none border border-black p-1.5 rounded-md w-[350px]"
             type="email"
             value={email}
             onChange={handleEmail}
             placeholder="Email"
           />
           <input
-            className="outline-none border border-black p-3 rounded-md w-[350px]"
+            className="outline-none border border-black p-1.5 rounded-md w-[350px]"
             type="password"
             value={password}
             onChange={handlePassword}

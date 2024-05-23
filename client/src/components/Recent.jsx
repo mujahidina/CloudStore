@@ -248,13 +248,6 @@
 
 
 
-import React, { useEffect, useState } from 'react';
-import { TiTick } from 'react-icons/ti';
-import { FaRegFileAlt, FaBars, FaRegTrashAlt, FaRegStar } from 'react-icons/fa';
-import { IoGridOutline } from 'react-icons/io5';
-import { TiFolderOpen } from 'react-icons/ti';
-import { SlOptionsVertical } from 'react-icons/sl';
-import { MdOutlineDriveFileRenameOutline } from 'react-icons/md';
 
 function Recent() {
   const [files, setFiles] = useState([]);

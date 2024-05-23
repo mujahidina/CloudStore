@@ -95,7 +95,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
         </div>
         <div className='flex w-full items-center justify-center'>
         
-        <form className={`flex w-[160px] mt-5 text-sm  border rounded-lg  ${darkMode ? 'dark-mode4' : 'light-mode'} items-center justify-center`}>
+        <form className={`flex w-[170px] mt-5 text-sm  border rounded-lg  ${darkMode ? 'dark-mode4' : 'light-mode'} items-center justify-center`}>
           <div onClick={handleUpload}  className={`flex cursor-pointer mr-2 ml-2   `}>
             <input
               type='text'

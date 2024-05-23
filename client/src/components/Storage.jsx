@@ -1,43 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import { TiFolderOpen } from 'react-icons/ti';
 
-const Storage = ({ userId }) => {
+const Storage = ({ userId, darkMode }) => {
   const [files, setFiles] = useState([]);
+  const [totalSize, setTotalSize] = useState(0);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5555/fileuser/${userId}`)
-      .then((response) => response.json())
+    const url = `http://127.0.0.1:5555/fileuser/${userId}`;
+    console.log('Fetch URL:', url);
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.json();
+      })
       .then((data) => {
+        console.log('Fetched files:', data);
         setFiles(data);
+        calculateTotalSize(data);
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
       });
   }, [userId]);
 
+  const calculateTotalSize = (files) => {
+    const total = files.reduce((acc, file) => acc + file.size, 0);
+    setTotalSize(total);
+  };
+
+  const formatSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   return (
-    <div className='bg-white container w-full h-full flex flex-col font-sans'>
+    <div className={`container w-full h-full flex flex-col ${darkMode ? 'dark-mode' : 'light-mode'}`}>
       <div className='text-2xl m-3'>
         Storage
       </div>
 
-      <div className='w-72 h-36 m-3'> 
-        <div className='flex'>
+      <div className='flex justify-between m-3'>
+        <div className='flex items-center'>
           <img src='/src/assets/storage.png' className='w-16 mt-9' alt='Storage icon' />
-          <div className='flex-col font-mono mt-11 ml-5'> 
+          <div className='flex-col font-mono mt-11 ml-5'>
             <h6 className='text-sm'>Total used</h6>
-            <h3 className='text-3xl'>20.2MB</h3>
+            <h3 className='text-3xl'>{formatSize(totalSize)}</h3>
           </div>
         </div>
       </div>
 
-      <div className='grid overflow-y-auto grid-cols-3 w-full ml-7'>
+      <div className='flex overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
+        <div className='flex w-full items-center justify-between'>
+          <h1 className='ml-[80px]'>Name</h1>
+          <h1>File type</h1>
+          <h1 className='mr-[120px]'>Size</h1>
+        </div>
         {files.map(file => (
-          <div key={file.id} className='flex items-center'>
-            <TiFolderOpen size={20} className='mr-5' />
-            <h1>{file.filename}</h1>
+          <div key={file.id} className='flex flex-col items-center'>
+            <div className='flex p-2 w-full items-center'>
+              <img src={file.path || '/src/assets/file.png'} className='w-[30px] h-[30px]' alt={file.filename} />
+              <h1 className='ml-[30px]'>{file.filename}</h1>
+              <h1 className='ml-[80px]'>{file.file_type}</h1>
+              <h1 className='ml-[370px]'>{formatSize(file.size)}</h1>
+            </div>
+            <div className='w-full mr-[140px] flex'><hr className='w-full' /></div>
           </div>
         ))}
       </div>
-      </div>
+    </div>
   );
-}
+};
 
 export default Storage;

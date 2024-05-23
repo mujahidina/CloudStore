@@ -26,7 +26,7 @@
         @apply bg-neutral-950 border-none;
     }
     .dark-mode3{
-      @apply bg-neutral-800 border-none;
+      @apply bg-neutral-800 border-none ;
 
       
   }

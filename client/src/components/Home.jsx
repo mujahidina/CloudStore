@@ -6,14 +6,12 @@ import { IoGridOutline } from "react-icons/io5";
 import { FaBars } from "react-icons/fa6";
 import { TiFolderOpen } from "react-icons/ti";
 import { SlOptionsVertical } from "react-icons/sl";
-import { CiEdit } from "react-icons/ci";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { FaRegStar } from "react-icons/fa6";
+import { FaRegTrashAlt, FaRegStar, FaStar } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import { CiShare2 } from "react-icons/ci";
 
 const Home = ({ darkMode, toggleMode, handleUpload }) => {
-
   const [selectedFiles, setSelectedFiles] = useState(true);
   const [selectedFolders, setSelectedFolders] = useState(false);
   const [gridView, setGridView] = useState(false);
@@ -27,6 +25,35 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
   const userId = sessionStorage.getItem('userId');
 
   const [hasItems, setHasItems] = useState(false);
+  
+  // State variables for managing the share input field
+  const [showShareInput, setShowShareInput] = useState(false);
+  const [emailAddress, setEmailAddress] = useState('');
+
+  // Function to toggle visibility of the share input field
+  const toggleShareInput = () => {
+    setShowShareInput(!showShareInput);
+  };
+
+  // Function to handle changes in the email address input
+  const handleEmailChange = (e) => {
+    setEmailAddress(e.target.value);
+  };
+
+  // Function to handle sharing action
+  const handleShare = () => {
+    // Implement the logic to share the selected file with the entered email address
+    console.log('Sharing file with email address:', emailAddress);
+    // Reset the input field and hide the share input field
+    setEmailAddress('');
+    setShowShareInput(false);
+  };
+
+  // Function to toggle file options
+  const toggleFileOptions = (fileId) => {
+    setFileOptions(!fileOptions);
+    setSelectedFileId(fileId);
+  };
 
   const toggleMessage = () => {
     setHasItems(!hasItems);
@@ -35,15 +62,8 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
   // States for editing
   const [editFolder, setEditFolder] = useState('');
   const [editFolderId, setEditFolderId] = useState(null);
-
- 
   const [editFileId, setEditFileId] = useState(null);
   const [selectedFileId, setSelectedFileId] = useState(null);
-
-  const toggleFileOptions = (fileId) => {
-    setFileOptions(!fileOptions);
-    setSelectedFileId(fileId);
-  };
 
   //handling trash items
   const handleMoveToTrash = (itemId) => {
@@ -193,14 +213,12 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
                   <button onClick={handleCancelClick}>Cancel</button>
                 </div>
               ) : (
-
                   <div className='flex  w-full justify-between   items-center '>
                     <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
                       <h1 className='w-full'>{folder.folder_name}</h1>
                     </Link>
                     <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
                   </div>
-
                 )}
               {options && selectedFolderId === folder.id && !editFolderId && (
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
@@ -261,14 +279,13 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
               <img src='/src/assets/file.png' className='w-[30px] h-[30px] ' />
               <h1 className='ml-4'>{file.filename}</h1>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[20px]  cursor-pointer' />
+              {fileOptions && selectedFileId === file.id && (
+                <div className={`w-[230px] flex  flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
+                  <div className='flex w-full'><h1 className='flex justify-between w-full' onClick={() => handleMoveToTrash(file.id)}>Move to trash <FaRegTrashAlt /></h1></div>
+                </div>
+              )}
             </div>
           ))}
-          {fileOptions && selectedFileId === file.id && (
-            <div className={`w-[230px] flex  flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
-              <div className='flex w-full'><h1 className='flex justify-between w-full' onClick={() => handleMoveToTrash(file.id)}>Move to trash <FaRegTrashAlt /></h1></div>
-
-            </div>
-          )}
         </div>
         :
         <div className='flex  overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
@@ -282,15 +299,25 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
               <h1 className='ml-4'>{file.filename}</h1>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[50px] text-sm cursor-pointer' />
               {fileOptions && selectedFileId === file.id && (
-                <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[700px] shadow-md mt-[50px] p-4 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[40px] flex justify-center`}>
-                  <div className='flex w-full'>
-                    <h1 className='flex justify-between items-center w-full' onClick={() => handleMoveToTrash(file.id)}>Move to trash <FaRegTrashAlt /></h1>
+                <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer ml-[700px] shadow-md mt-[50px] p-5 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[50px] flex justify-center`}>
+                  <div className='flex flex-col   w-full'>
+                    <h1 className='flex justify-between  items-center w-full' onClick={() => handleMoveToTrash(file.id)}>Move to trash <FaRegTrashAlt /></h1>
+                    <h1 onClick={toggleShareInput} className='flex justify-between mt-1 items-center w-full' >Share<CiShare2 /></h1>
+                    
                   </div>
+                  
                 </div>
               )}
             </div>
           ))}
+          {showShareInput && (
+                      <div className="flex items-center mt-[40px] ml-[625px] flex-col">
+                        <input type="email" value={emailAddress} onChange={handleEmailChange} placeholder="Enter email address" className="mr-2 outline-none px-2 py-1 border border-gray-300 rounded" />
+                        <button onClick={handleShare} className="px-3 py-1 border mt-4 rounded">Share</button>
+                      </div>
+                    )}
         </div>
+        
         : ""
       }
     </div>

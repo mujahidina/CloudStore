@@ -16,6 +16,7 @@ import Auth from './Auth';
 import Signup from './Signup';
 import Login from './Login';
 import FolderData from './FolderData';
+import Shares from './Shares';
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -110,6 +111,7 @@ const App = () => {
                 <Route path="/new" element={<New darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
                 <Route path="/profile" element={<Profile userId={userId} darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode} ImageUrl={cloudinaryRes}/> } />
                 <Route path="/recent" element={<Recent />} />
+                <Route path='/share' element={<Shares />} />
                 <Route path="/search" element={<SearchBar />} />
                 <Route path="/trash" element={<Trash darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
                 <Route path="/storage" element={<Storage handleUpload={handleUpload}/>} />

@@ -311,7 +311,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
             </div>
           ))}
           {showShareInput && (
-                      <div className="flex items-center mt-[40px] ml-[625px] flex-col">
+                      <div className="flex items-center mt-[20px] ml-[625px] flex-col">
                         <input type="email" value={emailAddress} onChange={handleEmailChange} placeholder="Enter email address" className="mr-2 outline-none px-2 py-1 border border-gray-300 rounded" />
                         <button onClick={handleShare} className="px-3 py-1 border mt-4 rounded">Share</button>
                       </div>

@@ -112,7 +112,7 @@ const App = () => {
                 <Route path="/search" element={<SearchBar />} />
                 <Route path="/trash" element={<Trash darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
                 <Route path="/storage" element={<Storage  userId={userId}handleUpload={handleUpload}/>} />
-                <Route path="/starred" element={<Starred darkMode={darkMode} toggleMode={toggleMode}/>} />
+                <Route path="/starred" element={<Starred userId={userId} darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/shared" element={<Shared />} />
                 <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} darkMode={darkMode} toggleMode={toggleMode} fileUrl={cloudinaryRes} />} />

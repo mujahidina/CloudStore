@@ -36,6 +36,7 @@ const Login = ({ handleAuth}) => {
         username,
         email,
         password
+        
       })
     };
 

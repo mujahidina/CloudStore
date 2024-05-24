@@ -14,8 +14,14 @@ app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cloudstore.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+
+app.json.compact = False
+
+app.secret_key = 'secret key'
+app.config['JWT_SECRET_KEY'] = "b'\x03\xa3\x8c\xb3\n\xf4\x16aFh\xc5'"
+
 db.init_app(app)
+
 migrate = Migrate(app, db)
 api = Api(app)
 jwt = JWTManager(app)
@@ -26,9 +32,10 @@ class UserRegister(Resource):
     @cross_origin()
     def post (self):
         data = request.get_json()
+        print(data)
         username = data.get("username")
         email = data.get("email")
-        password = data.get("password")
+        password = str(data.get("password"))
         image_url = data.get("image_url")
         
         
@@ -94,8 +101,10 @@ class UserLogin(Resource):
         return jsonify({
             "id": user.id,
             "email": user.email,
-            "access_token": user.access_token, 
+            "access_token": user.access_token,
+            "username": user.username,
             "image_url":user.image_url
+           
         
         })
         
@@ -142,7 +151,7 @@ class UserByID(Resource):
         db.session.add(user)
         db.session.commit()
 
-        return make_response(user.to_dict(only=("id","email","image_url","username","files","folders",)),200)
+        return make_response(user.to_dict(only=("id","email","username","files","folders","image_url")),200)
 
     def delete(self,id):
 
@@ -180,14 +189,22 @@ class Folders(Resource):
 api.add_resource(Folders,"/folders")     
 
 class FolderByUser(Resource):
+    def get(self, id):
+        folders = [folder.to_dict(only=("id", "folder_name", "user_id", "user.username")) for folder in Folder.query.filter(Folder.user_id == id,Folder.is_delete == 0)]
+
+        return make_response(folders, 200)
     
-    def get(self,id):
-        folders = [folder.to_dict(only=("id","folder_name","user_id","user.username")) for folder in Folder.query.filter(Folder.user_id==id)]       
-        
-        return make_response(folders,200)
     
-   
-api.add_resource(FolderByUser,"/foldersuser/<int:id>")
+
+api.add_resource(FolderByUser, "/foldersuser/<int:id>")
+
+class TrashFolders(Resource):
+    def get(self, id):
+        folders = [folder.to_dict(only=("id", "folder_name", "user_id", "user.username")) for folder in Folder.query.filter(Folder.user_id == id,Folder.is_delete == 1)]
+
+        return make_response(folders, 200)
+
+api.add_resource(TrashFolders, "/trashfolders/<int:id>")
 
 class FolderByID(Resource):
     
@@ -280,12 +297,12 @@ api.add_resource(FolderByID,"/folders/<int:id>")
 
 class Files(Resource):
     
-    @cross_origin()
+    
     def post(self):
         data = request.get_json()
         
         # Handle file upload to Cloudinary
-        # uploaded_file = upload(data.get('file'))  # Assuming the file is in the 'file' field of the JSON payload
+        uploaded_file = upload(data.get('file'))  # Assuming the file is in the 'file' field of the JSON payload
         
         try:
             new_file = File(
@@ -319,13 +336,20 @@ class FileByFolder(Resource):
 api.add_resource(FileByFolder,"/filefolder/<int:id>")    
 
 class FileByUser(Resource):
-    def get(self,id):
-        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.user_id==id)]
-               
-        
-        return make_response(files,200)
-    
-api.add_resource(FileByUser,"/fileuser/<int:id>")    
+    def get(self, id):
+        files = [file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username")) for file in File.query.filter(File.user_id == id,File.is_delete==0)]
+
+        return make_response(files, 200)
+
+api.add_resource(FileByUser, "/fileuser/<int:id>")
+
+class TrashFiles(Resource):
+    def get(self, id):
+        files = [file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username")) for file in File.query.filter(File.user_id == id,File.is_delete==1)]
+
+        return make_response(files, 200)
+
+api.add_resource(TrashFiles, "/trashfiles/<int:id>")   
     
  
 class FileByID(Resource):
@@ -382,7 +406,7 @@ api.add_resource(FileByID,"/files/<int:id>")
         
 class Shares(Resource):
     def get(self):
-        shares = [share.to_dict(only=("file.size","file_id","share_type","user_id","shared_with_user_id","user.username")) for share in Share.query.all()]
+        shares = [share.to_dict(only=("file.size","file_id","share_type","user_id","shared_with_user_email","user.username")) for share in Share.query.all()]
         return make_response(shares,200)
     
     def post(self):
@@ -394,7 +418,7 @@ class Shares(Resource):
             new_share = Share(
                 share_type= data.get('share_type'),
                 user_id = data.get('user_id'),
-                shared_with_user_id = data.get("shared_with_user_id"),
+                shared_with_user_email= data.get("shared_with_user_email"),
                 file_id = data.get("file_id")
                 
             )  
@@ -404,7 +428,7 @@ class Shares(Resource):
         except ValueError:
             return make_response(jsonify({"error":["validation errors"]}))    
         
-        return make_response(new_share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username")),201)
+        return make_response(new_share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username")),201)
     
 api.add_resource(Shares,"/shares")
 
@@ -413,7 +437,7 @@ class ShareByID(Resource):
         share = Share.query.filter(Share.id==id).first()
 
         if share:
-            return make_response(jsonify(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username"))),200)
+            return make_response(jsonify(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username"))),200)
         else:
             return make_response(jsonify({"error":"Shares files not found"}))
         
@@ -429,7 +453,7 @@ class ShareByID(Resource):
         db.session.add(share)
         db.session.commit()
 
-        return make_response(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username")),200) 
+        return make_response(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username")),200) 
     
     def delete(self,id):
         share = Share.query.filter(Share.id==id).first()
@@ -458,6 +482,7 @@ class StarredItems(Resource):
         try:
             starred_item = StarredItem(
                 file_id = data.get("file_id"),
+                folder_id = data.get("folder_id"),
                 item_type = data.get("item_type"),
                 user_id = data.get("user_id")
                 
@@ -498,6 +523,7 @@ class TrashItems(Resource):
         try:
             trash_item = TrashItem(
                 file_id = data.get("file_id"),
+                folder_id = data.get("folder_id"),
                 item_type = data.get("item_type"),
                 user_id = data.get("user_id")
                 

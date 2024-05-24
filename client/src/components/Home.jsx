@@ -12,7 +12,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
 
-const Home = ({ darkMode, toggleMode, handleUpload}) => {
+const Home = ({ darkMode, toggleMode, handleUpload }) => {
 
   const [selectedFiles, setSelectedFiles] = useState(true);
   const [selectedFolders, setSelectedFolders] = useState(false);
@@ -21,32 +21,55 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
   const [options, setOptions] = useState(false);
+  const [fileOptions, setFileOptions] = useState(false);
+
   const [selectedFolderId, setSelectedFolderId] = useState(null);
   const userId = sessionStorage.getItem('userId');
-  
+
+  const [hasItems, setHasItems] = useState(false);
+
+  const toggleMessage = () => {
+    setHasItems(!hasItems);
+  };
+
   // States for editing
   const [editFolder, setEditFolder] = useState('');
   const [editFolderId, setEditFolderId] = useState(null);
 
+ 
+  const [editFileId, setEditFileId] = useState(null);
+  const [selectedFileId, setSelectedFileId] = useState(null);
+
+  const toggleFileOptions = (fileId) => {
+    setFileOptions(!fileOptions);
+    setSelectedFileId(fileId);
+  };
+
   //handling trash items
   const handleMoveToTrash = (itemId) => {
-    fetch(`http://127.0.0.1:5555/trash/${itemId}`, {
-      method: 'PATCH',
+    fetch(`http://127.0.0.1:5555/`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ trashed: true })
-      
+      body: JSON.stringify({ 
+        file_id: itemId, // Update fileId
+        item_type: '', // Update item_type if necessary
+        user_id: userId
+      })
     })
-    .then(response => response.json())
-    .then(data => {
-      // Update UI to reflect changes, for example, remove the item from the view
-      setFolders(prevFolders => prevFolders.filter(folder => folder.id !== itemId));
-      console.log('Item moved to trash:', data);
-    })
-    .catch(error => {
-      console.error('Error moving item to trash:', error);
-    });
+      .then(response => response.json())
+      .then(data => {
+        // Remove the file from the files state
+        setFiles(prevFiles => prevFiles.filter(file => file.id !== itemId));
+  
+        // Update UI to reflect changes, for example, remove the item from the view
+        setFolders(prevFolders => prevFolders.filter(folder => folder.id !== itemId));
+        console.log('Item moved to trash:', data);
+      })
+      .catch(error => {
+        console.error('Error moving item to trash:', error);
+      });
   };
 
   useEffect(() => {
@@ -76,7 +99,7 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
   };
 
   const handleSaveClick = (id) => {
-    fetch(`http://127.0.0.1:5555/folders/${id}`, {
+    fetch(`http://127.0.0.1:5555/filefolder/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -129,9 +152,9 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
   };
 
   return (
-    <div className='flex  flex-col w-full h-full'>
-      <div className=''>
-        <div className='flex  w-full mt-5 items-center ml-7'><h1 className='text-xl'>Welcome to CloudStore</h1></div>
+    <div className='flex flex-col w-full h-full'>
+      <div>
+        <div className='flex w-full mt-5 items-center ml-7'><h1 className='text-xl'>Welcome to CloudStore</h1></div>
         <div className='flex w-full mt-5 justify-between items-center ml-9'>
           <h1>My Items</h1>
           <div className={`flex w-[200px] mr-[300px] ${darkMode ? 'dark-mode3' : 'light-mode3'} p-1 items-center rounded-full`}>
@@ -154,7 +177,7 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
       </div>
 
       {selectedFolders ? gridView ?
-        <div className='grid overflow-y-auto   ml-9 mr-9 gap-x-5 grid-cols-3 w-[940px] gap-y-8 mt-5'>
+        <div className='grid overflow-y-auto ml-9 mr-9 gap-x-5 grid-cols-3 w-[940px] gap-y-8 mt-5'>
           {folders.map(folder => (
             <div key={folder.id} className={`flex w-full h-[50px] justify-between rounded-xl  items-center ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer`}>
               <TiFolderOpen size={20} className='mr-5 ml-5' />
@@ -170,15 +193,15 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
                   <button onClick={handleCancelClick}>Cancel</button>
                 </div>
               ) : (
-                
-                <div className='flex  w-full justify-between   items-center '>
-                  <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
-                    <h1 className='w-full'>{folder.folder_name}</h1>
-                  </Link>
-                  <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
-                </div>
-               
-              )}
+
+                  <div className='flex  w-full justify-between   items-center '>
+                    <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
+                      <h1 className='w-full'>{folder.folder_name}</h1>
+                    </Link>
+                    <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
+                  </div>
+
+                )}
               {options && selectedFolderId === folder.id && !editFolderId && (
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
                   <div className='flex w-full' onClick={() => handleEditClick(folder.id, folder.folder_name)}><h1 className='flex justify-between w-full'>Rename</h1> <MdOutlineDriveFileRenameOutline /></div>
@@ -207,13 +230,13 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
                     <button className='mr-9' onClick={handleCancelClick}>Cancel</button>
                   </div>
                 ) : (
-                  <div className='flex  w-full justify-between   items-center '>
-                    <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
-                      <h1 className='w-full'>{folder.folder_name}</h1>
-                    </Link>
-                    <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
-                  </div>
-                )}
+                    <div className='flex  w-full justify-between   items-center '>
+                      <Link to={`/folderdata/${folder.id}`} handleUpload={handleUpload}>
+                        <h1 className='w-full'>{folder.folder_name}</h1>
+                      </Link>
+                      <SlOptionsVertical onClick={() => toggleOptions(folder.id)} size={15} className='mr-[20px]  cursor-pointer' />
+                    </div>
+                  )}
               </div>
               <div className='w-full flex'>
                 <hr className='w-full' />
@@ -232,30 +255,41 @@ const Home = ({ darkMode, toggleMode, handleUpload}) => {
       }
 
       {selectedFiles ? gridView ?
-        <div className='grid overflow-y-auto grid-cols-3 w-full ml-7 '>
-          
+        <div className='grid overflow-y-auto grid-cols-2 gap-5 mb-11 w-full ml-7 '>
           {files.map(file => (
-            <div key={file.id} className='flex items-center w-full'><img src='/src/assets/file.png' className='w-[30px] h-[30px] '/><h1 className='ml-4'>{file.filename}</h1></div>
+            <div key={file.id} className='flex text-sm justify-between items-center w-full'>
+              <img src='/src/assets/file.png' className='w-[30px] h-[30px] ' />
+              <h1 className='ml-4'>{file.filename}</h1>
+              <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[20px]  cursor-pointer' />
+            </div>
           ))}
+          {fileOptions && selectedFileId === file.id && (
+            <div className={`w-[230px] flex  flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[260px] p-4 absolute rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[200px] flex justify-center`}>
+              <div className='flex w-full'><h1 className='flex justify-between w-full' onClick={() => handleMoveToTrash(file.id)}>Move to trash <FaRegTrashAlt /></h1></div>
+
+            </div>
+          )}
         </div>
         :
         <div className='flex  overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
           <div className='flex w-full items-center justify-between'>
-          <h1 className='ml-[80px]'>Name</h1>
-          <h1>File type</h1>
-          <h1 className='mr-[120px]'>Size</h1></div>
+            <h1 className='ml-[80px]'>Name</h1>
+            <h1>File type</h1>
+            <h1 className='mr-[120px]'>Size</h1></div>
           {files.map(file => (
-            <div key={file.id} className='flex  flex-col items-center'>
-            <div className='flex p-2   w-full items-center'>
-            <img src='/src/assets/file.png' className='w-[30px] h-[30px]'/>
-            <h1 className='ml-[30px]'>{file.filename}</h1>
-            <h1 className='ml-[80px]'>{file.file_type}</h1>
-            <h1 className='ml-[370px]'>{file.size}</h1>
+            <div key={file.id} className='flex text-sm mb-5 justify-between  items-center w-full'>
+              <img src='/src/assets/file.png' className='w-[30px] ml-6 h-[30px]' />
+              <h1 className='ml-4'>{file.filename}</h1>
+              <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[50px] text-sm cursor-pointer' />
+              {fileOptions && selectedFileId === file.id && (
+                <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[700px] shadow-md mt-[50px] p-4 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[40px] flex justify-center`}>
+                  <div className='flex w-full'>
+                    <h1 className='flex justify-between items-center w-full' onClick={() => handleMoveToTrash(file.id)}>Move to trash <FaRegTrashAlt /></h1>
+                  </div>
+                </div>
+              )}
             </div>
-             <div className='w-full mr-[140px] flex'><hr className='w-full'/> </div></div>
-            
           ))}
-         
         </div>
         : ""
       }

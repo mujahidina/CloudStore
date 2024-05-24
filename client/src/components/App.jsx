@@ -72,6 +72,7 @@ const App = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userId');
     setIsAuthenticated(false);
+    navigate ('/')
   };
 
   useEffect(() => {

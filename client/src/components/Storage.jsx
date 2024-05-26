@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Storage = ({ userId, darkMode }) => {
+const Storage = ({ userId, userEmail, darkMode }) => {
   const [files, setFiles] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
 
@@ -23,11 +23,47 @@ const Storage = ({ userId, darkMode }) => {
         console.error('Fetch error:', error);
       });
   }, [userId]);
+  
 
+
+
+
+
+  useEffect(() => {
+    if (!userEmail) {
+      console.error('User email not provided.');
+      return;
+    }
+  
+    const url = `http://127.0.0.1:5555/shares?shared_with_user_email=${encodeURIComponent(userEmail)}`;
+    console.log('Fetch URL:', url);
+    
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Fetched files:', data);
+        setFiles(data);
+        calculateTotalSize(data); // Calculate total size after fetching shared files
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error.message);
+      });
+  }, [userEmail]);
+  
+  
+  
   const calculateTotalSize = (files) => {
-    const total = files.reduce((acc, file) => acc + file.size, 0);
+    const total = files.reduce((acc, file) => acc + (file.size || file.file.size || 0), 0);
     setTotalSize(total);
   };
+  
+
+
 
   const formatSize = (bytes) => {
     if (bytes === 0) return '0 Bytes';
@@ -60,16 +96,17 @@ const Storage = ({ userId, darkMode }) => {
           <h1 className='mr-[120px]'>Size</h1>
         </div>
         {files.map(file => (
-          <div key={file.id} className='flex flex-col items-center'>
-            <div className='flex p-2 w-full items-center'>
-              <img src={file.path || '/src/assets/file.png'} className='w-[30px] h-[30px]' alt={file.filename} />
-              <h1 className='ml-[30px]'>{file.filename}</h1>
-              <h1 className='ml-[80px]'>{file.file_type}</h1>
-              <h1 className='ml-[370px]'>{formatSize(file.size)}</h1>
+           <div key={file.id || file.file_id} className='flex flex-col items-center'>
+             <div className='flex p-2 w-full items-center'>
+                <img src={file.path || file.file.path || '/src/assets/file.png'} className='w-[30px] h-[30px]' alt={file.filename || file.file.filename} />
+                <h1 className='ml-[30px]'>{file.filename || file.file.filename}</h1>
+                <h1 className='ml-[80px]'>{file.file_type || "image"}</h1>
+                <h1 className='ml-[370px]'>{formatSize(file.size || file.file.size)}</h1>
+              </div>
+            < div className='w-full mr-[140px] flex'><hr className='w-full' /></div>
             </div>
-            <div className='w-full mr-[140px] flex'><hr className='w-full' /></div>
-          </div>
-        ))}
+         ))}
+
       </div>
     </div>
   );

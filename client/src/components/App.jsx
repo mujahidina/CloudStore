@@ -23,7 +23,24 @@ const App = () => {
   const token = sessionStorage.getItem('token');
   const userId = sessionStorage.getItem('userId');
   const[cloudinaryRes, setCloudinaryRes] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
+
   console.log('this is my user id', userId);
+ 
+
+  useEffect(() => {
+    // Make an API call to fetch user's email based on userId
+    fetch(`http://127.0.0.1:5555/users/${userId}`)
+      .then(response => response.json())
+      .then(data => {
+        setUserEmail(data.email);
+      })
+      .catch(error => {
+        console.error('Error fetching user email:', error);
+      });
+  }, [userId]);
+  
+  console.log('User Email:', userEmail);
 
 
   const cloudinaryRef = useRef();
@@ -105,16 +122,16 @@ const App = () => {
             </div>
             <div className={`rounded-xl  h-[530px] ${darkMode ? 'dark-mode2' : 'light-mode2'} mr-7 flex items-center justify-center`}>
               <Routes>
-                <Route path="/" element={<Home darkMode={darkMode} toggleMode={toggleMode} handleUpload={handleUpload}/>} />
+                <Route path="/" element={<Home userId={userId} darkMode={darkMode} toggleMode={toggleMode} handleUpload={handleUpload}/>} />
                 <Route path="/new" element={<New darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
                 <Route path="/profile" element={<Profile userId={userId} darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode} ImageUrl={cloudinaryRes}/> } />
                 <Route path="/recent" element={<Recent />} />
                 <Route path="/search" element={<SearchBar />} />
                 <Route path="/trash" element={<Trash darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
-                <Route path="/storage" element={<Storage  userId={userId}handleUpload={handleUpload}/>} />
+                <Route path="/storage" element={<Storage  userEmail={userEmail} userId={userId}handleUpload={handleUpload}/>} />
                 <Route path="/starred" element={<Starred userId={userId} darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/shared" element={<Shared />} />
+                <Route path="/shared" element={<Shared  userId={userId} userEmail={userEmail}/>} />
                 <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} darkMode={darkMode} toggleMode={toggleMode} fileUrl={cloudinaryRes} />} />
               </Routes>
             </div>

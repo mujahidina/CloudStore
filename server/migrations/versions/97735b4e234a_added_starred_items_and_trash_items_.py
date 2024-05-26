@@ -1,8 +1,8 @@
-"""initial migration
+"""added starred_items and trash_items tables
 
-Revision ID: 5a74661a8425
-Revises: af51673fcb9a
-Create Date: 2024-05-15 01:01:19.507913
+Revision ID: 97735b4e234a
+Revises: 68423aca8021
+Create Date: 2024-05-14 16:07:20.326317
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5a74661a8425'
-down_revision = 'af51673fcb9a'
+revision = '97735b4e234a'
+down_revision = '68423aca8021'
 branch_labels = None
 depends_on = None
 
@@ -29,7 +29,7 @@ def upgrade():
     op.create_table('trash_items',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('file_id', sa.Integer(), nullable=False),
-    sa.Column('item_type', sa.String(length=50), nullable=False),
+    sa.Column('item_type', sa.String(length=50)),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['file_id'], ['files.id'], ),
     sa.PrimaryKeyConstraint('id')

@@ -28,6 +28,36 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
 
   const [hasItems, setHasItems] = useState(false);
 
+  const handleStarFile = (fileId) => {
+    const payload = {
+      file_id: fileId,
+      item_type: 'file',
+      user_id: userId,
+    };
+
+    console.log('Starring file with payload:', payload);
+
+    fetch(`http://127.0.0.1:5555/starreditems`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('HTTP error! Status: ${response.status}');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('File starred successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error starring file:', error.message);
+      });
+  };
+
   const handleShare = (fileId) => {
     // Ensure the payload has the correct structure
     const payload = {
@@ -349,7 +379,11 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer ml-[700px] shadow-md mt-[50px] p-5 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[50px] flex justify-center`}>
                   <div className='flex flex-col   w-full'>
                     <h1 className='flex justify-between  items-center w-full' onClick={() => handleMoveToTrash(file.id)}>Move to trash <FaRegTrashAlt /></h1>
+                    <button onClick={() => handleStarFile(file.id)} className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>
+                Star <FaRegStar size={15} />
+              </button>
                     <h1 onClick={toggleShareInput} className='flex justify-between mt-1 items-center w-full' >Share<CiShare2 /></h1>
+
                     
                   </div>
                   

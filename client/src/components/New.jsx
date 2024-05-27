@@ -103,15 +103,7 @@ const New = ({ darkMode, handleUpload, fileUrl}) => {
           <button type="submit"><MdCreateNewFolder size={25} className='mr-4 text-slate-900'/></button>
         </form> : ""}
       </div>
-      <div  className='flex cursor-pointer w-full items-center p-3'>
-        <FaFileAlt size={20} className='mr-4 '/>
-        <form  onSubmit={handleFileUpload} className='flex flex-col'>
-        <button onClick={handleUpload}>File upload</button>
-        <input onChange={handleFileUpload} type='text' className='hidden' />
-        </form>
-        
-
-      </div>
+    
       
     </div>
   );

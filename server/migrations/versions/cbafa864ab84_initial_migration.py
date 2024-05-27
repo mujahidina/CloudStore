@@ -1,8 +1,8 @@
-"""new db
+"""initial migration
 
-Revision ID: b71597a67f5a
+Revision ID: cbafa864ab84
 Revises: 
-Create Date: 2024-05-24 12:08:21.885449
+Create Date: 2024-05-27 23:45:15.581663
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b71597a67f5a'
+revision = 'cbafa864ab84'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -67,11 +67,10 @@ def upgrade():
     op.create_table('starred_items',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('file_id', sa.Integer(), nullable=True),
-    sa.Column('folder_id', sa.Integer(), nullable=True),
-    sa.Column('item_type', sa.String(length=50), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('item_type', sa.String(length=50), nullable=False),
     sa.ForeignKeyConstraint(['file_id'], ['files.id'], ),
-    sa.ForeignKeyConstraint(['folder_id'], ['folders.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('trash_items',

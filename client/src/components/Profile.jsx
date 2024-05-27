@@ -116,7 +116,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
               type="email"
               value={editedEmail}
               onChange={handleEmailChange}
-              className='w-[200px] p-2 border outline-none rounded-lg'
+              className={`w-[200px] p-2 border outline-none rounded-lg ${darkMode ? 'dark-mode4' : 'light-mode'}`}
             />
           </div>
         ) : (

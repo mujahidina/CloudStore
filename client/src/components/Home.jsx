@@ -114,6 +114,39 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
       });
   };
 
+
+  const handleStarFile = (fileId) => {
+    const payload = {
+      file_id: fileId,
+      item_type: 'file',
+      user_id: userId,
+    };
+  
+    console.log('Starring file with payload:', payload);
+  
+    fetch(`http://127.0.0.1:5555/starreditems`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('File starred successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error starring file:', error.message);
+      });
+  };
+  
+  
+
   useEffect(() => {
     // Fetch folders
     fetch(`http://127.0.0.1:5555/foldersuser/${userId}`)
@@ -314,7 +347,10 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
                                         <ul>
                                           <li onClick={() => handleMoveToTrash(file.id)} className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Trash <FaRegTrashAlt size={15} /></li>
                                           <li className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Star <FaRegStar size={15} /></li>
-                                          <li className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Unstar <FaStar size={15} /></li>
+                                          {/* <li className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Unstar <FaStar size={15} /></li> */}
+                                          <button onClick={() => handleStarFile(file.id)} className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>
+                    Star <FaRegStar size={15} />
+                  </button>
                                           <li onClick={toggleShareInput} className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Share <CiShare2 size={15} /></li>
                                           {showShareInput && (
                                             <div className='p-2'>
@@ -353,8 +389,11 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
                                         <div className='absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg'>
                                           <ul>
                                             <li onClick={() => handleMoveToTrash(file.id)} className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Trash <FaRegTrashAlt size={15} /></li>
-                                            <li className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Star <FaRegStar size={15} /></li>
-                                            <li className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Unstar <FaStar size={15} /></li>
+                                            {/* <li className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Star <FaRegStar size={15} /></li> */}
+                                            <button onClick={() => handleStarFile(file.id)} className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>
+                    Star <FaRegStar size={15} />
+                  </button>
+                                            {/* <li className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Unstar <FaStar size={15} /></li> */}
                                             <li onClick={toggleShareInput} className='cursor-pointer p-2 hover:bg-gray-200 dark:hover:bg-gray-700'>Share <CiShare2 size={15} /></li>
                                             {showShareInput && (
                                               <div className='p-2'>
@@ -384,22 +423,6 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
 };
 
 export default Home;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

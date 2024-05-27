@@ -498,11 +498,31 @@ api.add_resource(SharesPost, "/shares")
 
 
 class StarredItems(Resource):
-    def get(self, is_starred):
-        starred_items= [starred.to_dict() for starred in Files.query.filter(File.is_starred==0).all()]
-        return make_response(starred_items,200)
+    def get(self, user_id):
+        starred_items = [
+            {
+                'file_id': starred_item.file_id,
+                'user_id': starred_item.user_id,
+                'user': {
+                    'email': starred_item.user.email,
+                    'username': starred_item.user.username
+                },
+                'file': {
+                    'size': starred_item.file.size,
+                    'path': starred_item.file.path,
+                    'filename': starred_item.file.filename
+                }
+            }
+            for starred_item in StarredItem.query.filter(StarredItem.user_id==user_id).all()
+        ]
     
-    def post(self):
+        return make_response((starred_items), 200)
+    
+api.add_resource(StarredItems,"/starreditems/<int:user_id>")   
+
+
+class StarredItemsPost(Resource):
+      def post(self):
         data =  request.get_json()
         
         try:
@@ -518,21 +538,23 @@ class StarredItems(Resource):
             return make_response(jsonify({"error":["validation errors"]}))    
         
         return make_response(starred_item.to_dict(only=("id","file_id","item_type","user_id")),201)
-    
-api.add_resource(StarredItems,"/starreditems")   
+api.add_resource(StarredItemsPost,"/starreditems")   
+      
 
-class StarredItemByID(Resource):
-   def delete(self, id):
-        starred_item = StarredItem.query.filter(StarredItem.id==id).first()
+
+class StarredItemByFileID(Resource):
+   def delete(self, file_id):
+        starred_item = StarredItem.query.filter(StarredItem.file_id == file_id).first()
 
         if starred_item:
             db.session.delete(starred_item)
             db.session.commit()
-            return make_response("",204)
+            return make_response("", 204)
         else:
-            return make_response(jsonify({"error":"Item not found"}),404)
+            return make_response(jsonify({"error": "Item not found"}), 404)
         
-api.add_resource(StarredItemByID,"/starreditem/<int:id>")    
+api.add_resource(StarredItemByFileID, "/starreditem/<int:file_id>")
+
 
 class TrashItems(Resource):
     def get(self):
@@ -582,4 +604,8 @@ api.add_resource(TrashItemByID,"/trashitem/<int:id>")
         
 
 if __name__ == "__main__":
-    app.run(port=5555,debug=True)      
+    app.run(port=5555,debug=True) 
+
+
+
+

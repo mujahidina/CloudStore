@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Signup = ({handleAuth}) => {
+const Signup = ({ handleAuth }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -21,10 +21,7 @@ const Signup = ({handleAuth}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password, username);
-  };
 
-  const handleClick = () => {
     const opts = {
       method: 'POST',
       headers: {
@@ -40,17 +37,22 @@ const Signup = ({handleAuth}) => {
     fetch('http://127.0.0.1:5555/user/register', opts)
       .then((response) => {
         if (response.ok) {
-          console.log(response);
-          alert('Account Created');
-          handleAuth()
-          navigate('/');
+          return response.json();
         } else {
           alert('Failed to create account');
+          throw new Error('Failed to create account');
         }
-        return response.json();
       })
       .then((data) => {
         console.log(data);
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('userId', data.userId);
+        alert('Account Created');
+        handleAuth();
+        navigate('/login');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
   };
 
@@ -59,7 +61,7 @@ const Signup = ({handleAuth}) => {
       <div className="bg-white rounded-3xl w-[900px] h-[300px] p-7 grid grid-cols-2">
         <div className="w-full ml-6 mt-5">
           <div>
-            <img src="/src/assets/drive.png" className="w-11 mr-3 h-11 mb-5" alt="drive" />
+            <img src="/public/drive.png" className="w-11 mr-3 h-11 mb-5" alt="drive" />
           </div>
           <h1 className="text-4xl">Create a CloudStore</h1>
           <h1 className="text-4xl mt-2">Account</h1>
@@ -88,7 +90,7 @@ const Signup = ({handleAuth}) => {
             placeholder="Password"
           />
           <button
-            onClick={handleClick}
+            type="submit"
             className="flex items-center justify-center border rounded-full p-3 w-[120px] bg-[#2563eb] hover:bg-[#1d4ed8] text-sm text-white"
           >
             Sign up

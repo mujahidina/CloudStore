@@ -71,7 +71,8 @@ class UserRegister(Resource):
         return jsonify({
             "id":"new_user.id",
             "username":"new_user.username",
-            "access_token":access_token
+            "access_token":access_token,
+            "token":access_token
             
         })
         
@@ -317,7 +318,7 @@ class Files(Resource):
         except ValueError:
             return make_response(jsonify({"error": ["validation errors"]}))    
         
-        return make_response(new_file.to_dict(only=("filename", "file_type", "user.username", "folder_id", "path", "size", "user_id")), 201)
+        return make_response(new_file.to_dict(only=("filename", "file_type", "user.username", "folder_id", "path", "size", "user_id", "created_at")), 201)
 
     
     
@@ -326,7 +327,7 @@ api.add_resource(Files,"/files")
 
 class FileByFolder(Resource):
     def get(self,id):
-        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username", "is_delete")) for files in File.query.filter(File.folder_id==id)]
+        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username", "is_delete", "created_at")) for files in File.query.filter(File.folder_id==id)]
                
         
         return make_response(files,200)
@@ -335,7 +336,7 @@ api.add_resource(FileByFolder,"/filefolder/<int:id>")
 
 class FileByUser(Resource):
     def get(self, id):
-        files = [file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username", "is_delete")) for file in File.query.filter(File.user_id == id,File.is_delete==0)]
+        files = [file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username", "is_delete", "created_at")) for file in File.query.filter(File.user_id == id,File.is_delete==0)]
 
         return make_response(files, 200)
 
@@ -427,68 +428,50 @@ api.add_resource(DeleteFile, '/deletefiles/<int:id>')
 
         
 class Shares(Resource):
-    def get(self):
-        shares = [share.to_dict(only=("file.size","file_id","share_type","user_id","shared_with_user_email","user.username")) for share in Share.query.all()]
-        return make_response(shares,200)
-    
-    def post(self):
-        data =  request.get_json()
-        
-       
-        
-        try:
-            new_share = Share(
-                share_type= data.get('share_type'),
-                user_id = data.get('user_id'),
-                shared_with_user_email= data.get("shared_with_user_email"),
-                file_id = data.get("file_id")
-                
-            )  
-            db.session.add(new_share)
-            db.session.commit() 
-            
-        except ValueError:
-            return make_response(jsonify({"error":["validation errors"]}))    
-        
-        return make_response(new_share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username")),201)
-    
-api.add_resource(Shares,"/shares")
+    def get(self, shared_with_user_email):
+        shares = [
+            {
+                'file_id': share.file_id,
+                'share_type': share.share_type,
+                'shared_with_user_email': share.shared_with_user_email,
+                'user_id': share.user_id,
+                'user': {
+                    'email': share.user.email,
+                    'username': share.user.username
+                },
+                'file': {
+                    'size': share.file.size,
+                    'path': share.file.path,
+                    'filename': share.file.filename
+                }
+            }
+            for share in Share.query.filter(Share.shared_with_user_email==shared_with_user_email).all()
+        ]
+        return make_response(jsonify(shares), 200)
 
-class ShareByID(Resource):
-    def get(self,id):
-        share = Share.query.filter(Share.id==id).first()
+api.add_resource(Shares, "/shares/<string:shared_with_user_email>")
 
-        if share:
-            return make_response(jsonify(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username"))),200)
-        else:
-            return make_response(jsonify({"error":"Shares files not found"}))
-        
-    def patch(self,id):
+class SharesPost(Resource):
+        def post(self):
+            data =  request.get_json()
 
-        data = request.get_json()
+            try:
+                new_share = Share(
+                    share_type= data.get('share_type'),
+                    user_id = data.get('user_id'),
+                    shared_with_user_email = data.get("shared_with_user_email"),
+                    file_id = data.get("file_id")
 
-        share = Share.query.filter(Share.id==id).first()
+                )
+                db.session.add(new_share)
+                db.session.commit() 
 
-        for attr in data:
-            setattr(share,attr,data.get(attr))
+            except ValueError:
+                return make_response(jsonify({"error":["validation errors"]}))
 
-        db.session.add(share)
-        db.session.commit()
+            return make_response(new_share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username")),201)
 
-        return make_response(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username")),200) 
-    
-    def delete(self,id):
-        share = Share.query.filter(Share.id==id).first()
-
-        if share:
-            db.session.delete(share)
-            db.session.commit()
-            return make_response("",204)
-        else:
-            return make_response(jsonify({"error":"Shared file not found"}),404)
-        
-        
-api.add_resource(ShareByID,"/shares/<int:id>")     
+api.add_resource(SharesPost, "/shares")     
 
 
 class StarredItems(Resource):

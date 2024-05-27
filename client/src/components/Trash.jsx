@@ -31,7 +31,7 @@ const Trash = ({ darkMode, toggleMode }) => {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://127.0.0.1:5555/files/${id}`, {
+    fetch(`http://127.0.0.1:5555/deletefiles/${id}`, {
       method: 'DELETE',
     })
     .then(response => {
@@ -114,13 +114,14 @@ const Trash = ({ darkMode, toggleMode }) => {
         <div className='flex flex-col w-full items-center mt-8'>
           {trashItem.map(file => (
             <div className='flex w-full text-sm items-center justify-between p-2 p-x-9' key={file.id}>
-              <img src='/public/file.png' className='w-[30px] h-[30px] ml-[40px]' alt="File Icon"/>
+              {/* <img src='/public/file.png' className='w-[30px] h-[30px] ml-[40px]' alt="File Icon"/> */}
+              <img src={file.path} className='h-[40px] ml-[50px] w-[40px] rounded-full' /> 
               <div className='flex items-center'>{file.filename}</div>
               <div className='flex items-center'>{file.file_type}</div>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={10} className='mr-[70px] cursor-pointer' />
 
               {fileOptions && selectedFileId === file.id && (
-                <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer ml-[700px] shadow-md mt-[50px] p-5 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[50px] flex justify-center`}>
+                <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer ml-[700px] shadow-md mt-[80px] p-5 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[50px] flex justify-center`}>
                   <div className='flex flex-col w-full'>
                     <h1 className='flex justify-between items-center w-full' onClick={() => handleDelete(file.id)}>Delete<FaRegTrashAlt /></h1>
                     <h1 className='flex justify-between items-center w-full' onClick={() => handleRestoreTrash(file.id)}>Restore<FaTrashRestore /></h1>

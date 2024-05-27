@@ -44,7 +44,7 @@ const Login = ({ handleAuth}) => {
       .then((response) => {
         if (response.ok) {
           console.log(response);
-          alert('Login successful');
+          
           handleAuth(); 
           navigate('/'); 
         } else {
@@ -68,7 +68,7 @@ const Login = ({ handleAuth}) => {
       <div className="bg-white rounded-3xl w-[900px] h-[300px] p-7 grid grid-cols-2">
         <div className="w-full ml-12 mt-5">
           <div>
-            <img src="/src/assets/drive.png" className="w-11 mr-3 h-11 mb-3" alt="drive" />
+            <img src="/public/drive.png" className="w-11 mr-3 h-11 mb-3" alt="drive" />
           </div>
           <h1 className="text-4xl">Sign In to Your</h1>
           <h1 className="text-4xl mt-2">Account</h1>

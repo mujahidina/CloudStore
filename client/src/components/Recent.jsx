@@ -50,14 +50,14 @@ function Recent({ darkMode, toggleMode }) {
   const categorizedFiles = categorizeByMonth(sortedFiles);
 
   return (
-    <div className={` w-full h-full rounded-xl flex flex-col ${darkMode ? 'dark-mode3' : 'light-mode3'}`}>
+    <div className={` w-full h-full rounded-xl flex flex-col ${darkMode ? 'dark-mode3' : 'light-mode2'}`}>
       <div className='text-2xl m-3'>
         Recent Files
       </div>
       <div className='flex justify-between m-3'>
         <button onClick={sortFilesByDate} className="">Sort by Recently Created</button>
       </div>
-      <div className='flex overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
+      <div className='flex overflow-y-auto flex-col w-full h-full ml-7 mt-2'>
         {Object.keys(categorizedFiles).map((month, index) => (
           <div key={index}>
             <br />

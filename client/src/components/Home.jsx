@@ -20,20 +20,64 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
   const [files, setFiles] = useState([]);
   const [options, setOptions] = useState(false);
   const [fileOptions, setFileOptions] = useState(false);
+  const[isLoaded, setIsLoaded]=useState(false)
+  const [emailAddress, setEmailAddress] = useState('');
 
   const [selectedFolderId, setSelectedFolderId] = useState(null);
   const userId = sessionStorage.getItem('userId');
 
   const [hasItems, setHasItems] = useState(false);
+
+  const handleShare = (fileId) => {
+    // Ensure the payload has the correct structure
+    const payload = {
+      file_id: fileId, 
+      share_type: 'read', 
+      user_id: userId,
+      shared_with_user_email: emailAddress,
+    };
+
+    console.log('Payload:', payload);
+
+    fetch('http://127.0.0.1:5555/shares', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Sharing file with email address:', emailAddress);
+        setEmailAddress('');
+        setShowShareInput(false);
+        console.log('File shared successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error sharing file:', error);
+      });
+  };
+  
+
+
   
   // State variables for managing the share input field
   const [showShareInput, setShowShareInput] = useState(false);
-  const [emailAddress, setEmailAddress] = useState('');
+
+
+  // Function to share a file
+
+  
 
   // Function to toggle visibility of the share input field
   const toggleShareInput = () => {
     setShowShareInput(!showShareInput);
   };
+
+  const toggleFilesOptions=()=>{
+    setIsLoaded(!isLoaded)
+
+  }
 
   // Function to handle changes in the email address input
   const handleEmailChange = (e) => {
@@ -41,13 +85,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
   };
 
   // Function to handle sharing action
-  const handleShare = () => {
-    // Implement the logic to share the selected file with the entered email address
-    console.log('Sharing file with email address:', emailAddress);
-    // Reset the input field and hide the share input field
-    setEmailAddress('');
-    setShowShareInput(false);
-  };
+  
 
   // Function to toggle file options
   const toggleFileOptions = (fileId) => {
@@ -200,6 +238,8 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
         </div>
       </div>
 
+   
+
       {selectedFolders ? gridView ?
         <div className='grid overflow-y-auto ml-9 mr-9 gap-x-5 grid-cols-3 w-[940px] gap-y-8 mt-5'>
           {folders.map(folder => (
@@ -280,7 +320,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
         <div className='grid overflow-y-auto grid-cols-2 gap-5 mb-11 w-full ml-7 '>
           {files.map(file => (
             <div key={file.id} className='flex text-sm justify-between items-center w-full'>
-              <img src='/public/file.png' className='w-[30px] h-[30px] ' />
+            <img src={file.path} className="w-[40px] ml-7 h-[40px] rounded-full" />
               <h1 className='ml-4'>{file.filename}</h1>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[20px]  cursor-pointer' />
               {fileOptions && selectedFileId === file.id && (
@@ -301,7 +341,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
             <h1 className='mr-[30px]'>Controls</h1></div>
           {files.map(file => (
             <div key={file.id} className='flex text-sm mb-5 justify-between  items-center w-full'>
-              <img src='/public/file.png' className='w-[30px] ml-6 h-[30px]' />
+             <img src={file.path} className="h-[40px] w-[40px] ml-7 rounded-full"/> 
               <h1 className='ml-4'>{file.filename}</h1>
               <h1 className='ml-2'>{file.file_type}</h1>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[50px] text-sm cursor-pointer' />

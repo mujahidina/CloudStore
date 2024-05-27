@@ -25,7 +25,7 @@ const Shared = ({ userEmail, darkMode }) => {
   }, [userEmail]);
 
   return (
-    <div className={`w-full h-full flex flex-col ${darkMode ? 'dark-mode3' : 'light-mode3'}`}>
+    <div className={`w-full h-full rounded-xl flex flex-col ${darkMode ? 'dark-mode3' : 'light-mode3'}`}>
       <div className='text-2xl m-3'>
         Shared with me
       </div>

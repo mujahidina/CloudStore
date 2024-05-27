@@ -280,7 +280,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
         <div className='grid overflow-y-auto grid-cols-2 gap-5 mb-11 w-full ml-7 '>
           {files.map(file => (
             <div key={file.id} className='flex text-sm justify-between items-center w-full'>
-              <img src='/src/assets/file.png' className='w-[30px] h-[30px] ' />
+              <img src='/public/file.png' className='w-[30px] h-[30px] ' />
               <h1 className='ml-4'>{file.filename}</h1>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[20px]  cursor-pointer' />
               {fileOptions && selectedFileId === file.id && (
@@ -301,7 +301,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
             <h1 className='mr-[30px]'>Controls</h1></div>
           {files.map(file => (
             <div key={file.id} className='flex text-sm mb-5 justify-between  items-center w-full'>
-              <img src='/src/assets/file.png' className='w-[30px] ml-6 h-[30px]' />
+              <img src='/public/file.png' className='w-[30px] ml-6 h-[30px]' />
               <h1 className='ml-4'>{file.filename}</h1>
               <h1 className='ml-2'>{file.file_type}</h1>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[50px] text-sm cursor-pointer' />

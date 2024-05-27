@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const Auth = () => {
   return (
     <div className='flex items-center  flex-col h-screen w-full'>
-      <div className='flex items-center fixed border-b-gray-500 bg-white shadow-md justify-start h-[70px] w-full   '><button><HiBars3  size={25} className='mr-5 ml-4 text-gray-600'/></button><img src="src/assets/drive.png" alt=' drive logo' className='w-11 mr-3 h-11 '/><h1 className='text-xl text-gray-500'><span className='text-gray-600 hover:text-black'>Cloud</span>Store</h1></div>
+      <div className='flex items-center fixed border-b-gray-500 bg-white shadow-md justify-start h-[70px] w-full   '><button><HiBars3  size={25} className='mr-5 ml-4 text-gray-600'/></button><img src="/public/drive.png" alt=' drive logo' className='w-11 mr-3 h-11 '/><h1 className='text-xl text-gray-500'><span className='text-gray-600 hover:text-black'>Cloud</span>Store</h1></div>
       {/* <div className='w-full flex '><hr className='fle w-full'/></div> */}
       <div className='w-full mt-[120px] flex items-center justify-center text-6xl'>
         

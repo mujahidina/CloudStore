@@ -30,7 +30,7 @@ const Starred = ({darkMode, toggleMode}) => {
           </div>
           </div>
       <div>
-        <img src='/src/assets/star.png' className='w-[300px] h-[300px]'/>
+        <img src='/public/star.png' className='w-[300px] h-[300px]'/>
       </div>
       <div className='flex flex-col w-full mt-5 items-center justify-center'>
         <h1 className='text-xl mb-5'>No starred files!</h1>

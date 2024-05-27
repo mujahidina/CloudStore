@@ -78,7 +78,7 @@ const Trash = ({ darkMode, toggleMode }) => {
       </div>
       {isEmpty ? (
         <div>
-          <img src='/src/assets/trash.png' className='w-[300px] h-[300px]' alt="Trash Can"/>
+          <img src='/public/trash.png' className='w-[300px] h-[300px]' alt="Trash Can"/>
           <div className='flex flex-col w-full mt-5 items-center justify-center'>
             <h1 className='text-xl mb-5'>Nothing in Trash!</h1>
             <h1 className='text-sm'>Move items you don't need to trash. Once you delete them here,</h1>
@@ -89,7 +89,7 @@ const Trash = ({ darkMode, toggleMode }) => {
         <div className='flex flex-col w-full items-center mt-8'>
           {trashItem.map(file => (
             <div className='flex w-full text-sm items-center justify-between p-2 p-x-9' key={file.id}>
-              <img src='/src/assets/file.png' className='w-[30px] h-[30px] ml-[40px]' alt="File Icon"/>
+              <img src='/public/file.png' className='w-[30px] h-[30px] ml-[40px]' alt="File Icon"/>
               <div className='flex items-center'>{file.filename}</div>
               <div className='flex items-center'>{file.file_type}</div>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={10} className='mr-[70px] cursor-pointer' />

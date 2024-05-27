@@ -386,7 +386,7 @@ api.add_resource(FileByID,"/files/<int:id>")
 class FileByFilename(Resource):
     
     def get(self, filename):
-        # Use ilike for case-insensitive search and partial matches
+        
         file = File.query.filter(File.filename.ilike(f'%{filename}%')).first()
 
         if file:
@@ -418,8 +418,6 @@ class DeleteFile(Resource):
         file = File.query.get(id)
         if not file:
             return {"error": "File not found"}, 404
-
-        # Here you can add additional logic to remove the file from Cloudinary if necessary
 
         db.session.delete(file)
         db.session.commit()

@@ -3,6 +3,7 @@ import { TiTick } from "react-icons/ti";
 import { IoGridOutline } from "react-icons/io5";
 import { FaBars, FaRegTrashAlt } from "react-icons/fa";
 import { SlOptionsVertical } from "react-icons/sl";
+import { FaTrashRestore } from "react-icons/fa";
 
 const Trash = ({ darkMode, toggleMode }) => {
   const [gridView, setGridView] = useState(false);
@@ -30,12 +31,12 @@ const Trash = ({ darkMode, toggleMode }) => {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://127.0.0.1:5555/deletefiles/${id}`, {
+    fetch(`http://127.0.0.1:5555/files/${id}`, {
       method: 'DELETE',
     })
     .then(response => {
       if (response.ok) {
-        setTrashItem(prevTrashItems => prevTrashItems.filter(item => item.id !== id)); // Changed 'id' to 'fileId' here
+        setTrashItem(prevTrashItems => prevTrashItems.filter(item => item.id !== id));
         setIsEmpty(prevTrashItems => prevTrashItems.length === 1);
         setFileOptions(false);
         setSelectedFileId(null);
@@ -49,13 +50,37 @@ const Trash = ({ darkMode, toggleMode }) => {
     });
   };
 
+  const handleRestoreTrash = (id) => {
+    const url = `http://127.0.0.1:5555/move-to-trash/${id}`;
+
+    fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        is_delete: false,
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        setTrashItem(prevTrashItems => prevTrashItems.filter(item => item.id !== id));
+        setIsEmpty(prevTrashItems => prevTrashItems.length === 1);
+      } else {
+        throw new Error('Failed to restore file from trash');
+      }
+    })
+    .catch(error => {
+      console.error('Error restoring file from trash:', error);
+    });
+  };
+
   useEffect(() => {
     fetch(`http://127.0.0.1:5555/trashfiles/${userId}`)
       .then(response => response.json())
       .then(data => {
         setTrashItem(data);
         setIsEmpty(data.length === 0);
-
       })
       .catch(error => {
         console.error('Error fetching trash files:', error);
@@ -98,6 +123,7 @@ const Trash = ({ darkMode, toggleMode }) => {
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer ml-[700px] shadow-md mt-[50px] p-5 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[50px] flex justify-center`}>
                   <div className='flex flex-col w-full'>
                     <h1 className='flex justify-between items-center w-full' onClick={() => handleDelete(file.id)}>Delete<FaRegTrashAlt /></h1>
+                    <h1 className='flex justify-between items-center w-full' onClick={() => handleRestoreTrash(file.id)}>Restore<FaTrashRestore /></h1>
                   </div>
                 </div>
               )}

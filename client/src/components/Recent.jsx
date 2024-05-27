@@ -1,36 +1,32 @@
 import React, { useState, useEffect } from 'react';
 
-
 const userId = sessionStorage.getItem('userId');
 
-function Recent({ darkMode, toggleMode }) {  
+function Recent({ darkMode }) {
   const [files, setFiles] = useState([]);
   const [sortedFiles, setSortedFiles] = useState([]);
 
-    
   useEffect(() => {
 
-    const url = `http://127.0.0.1:5555/fileuser/${userId}`;
-    console.log('Fetch URL:', url);
-    
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Fetched files:', data);
-        setFiles(data);
-        setSortedFiles(data)
-      })
-      .catch((error) => {
-        console.error('Fetch error:', error.message);
-      });
+const url = `http://127.0.0.1:5555/fileuser/${userId}`;
+console.log('Fetch URL:', url);
+
+fetch(url)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    console.log('Fetched files:', data);
+    setFiles(data);
+    setSortedFiles(data)
+  })
+  .catch((error) => {
+    console.error('Fetch error:', error.message);
+  });
   }, [userId]);
-
-
 
   const sortFilesByDate = () => {
     const sorted = [...files].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -50,14 +46,14 @@ function Recent({ darkMode, toggleMode }) {
   const categorizedFiles = categorizeByMonth(sortedFiles);
 
   return (
-    <div className={` w-full h-full rounded-xl flex flex-col ${darkMode ? 'dark-mode3' : 'light-mode2'}`}>
+    <div className={`container w-full rounded-xl h-full flex flex-col ${darkMode ? 'dark-mode3' : 'light-mode2'}`}>
       <div className='text-2xl m-3'>
         Recent Files
       </div>
       <div className='flex justify-between m-3'>
-        <button onClick={sortFilesByDate} className="">Sort by Recently Created</button>
+        <button onClick={sortFilesByDate} className="btn btn-primary">Sort by Recently Created</button>
       </div>
-      <div className='flex overflow-y-auto flex-col w-full h-full ml-7 mt-2'>
+      <div className='flex overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
         {Object.keys(categorizedFiles).map((month, index) => (
           <div key={index}>
             <br />

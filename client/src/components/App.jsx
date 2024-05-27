@@ -22,9 +22,11 @@ const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
   const [cloudinaryRes, setCloudinaryRes] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
 
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
+  const userId=sessionStorage.getItem('userId')
 
   useEffect(() => {
     cloudinaryRef.current = window.cloudinary;
@@ -39,6 +41,20 @@ const App = () => {
       }
     });
   }, []);
+
+  //get email
+
+  useEffect(() => {
+    // Make an API call to fetch user's email based on userId
+    fetch(`http://127.0.0.1:5555/users/${userId}`)
+      .then(response => response.json())
+      .then(data => {
+        setUserEmail(data.email);
+      })
+      .catch(error => {
+        console.error('Error fetching user email:', error);
+      });
+  }, [userId]);
 
   const handleUpload = () => {
     widgetRef.current.open();
@@ -93,7 +109,7 @@ const App = () => {
                 <Route path="/storage" element={<Storage handleUpload={handleUpload} darkMode={darkMode} />} />
                 <Route path="/starred" element={<Starred darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/shared" element={<Shared darkMode={darkMode} />} />
+                <Route path="/shared" element={<Shared darkMode={darkMode} userEmail={userEmail}/>} />
                 <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} darkMode={darkMode} toggleMode={toggleMode} fileUrl={cloudinaryRes} />} />
               </Routes>
             </div>

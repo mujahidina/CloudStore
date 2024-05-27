@@ -66,30 +66,32 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
   const [selectedFileId, setSelectedFileId] = useState(null);
 
   //handling trash items
-  const handleMoveToTrash = (itemId) => {
-    fetch(`http://127.0.0.1:5555/`, {
-      method: 'POST',
+  const handleMoveToTrash = (id) => {
+    const url = `http://127.0.0.1:5555/move-to-trash/${id}`; // Update the endpoint URL
+    
+    fetch(url, {
+      method: 'PUT', // Change the method to PUT
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
-        file_id: itemId, // Update fileId
-        item_type: '', // Update item_type if necessary
-        user_id: userId
+      body: JSON.stringify({
+        // Send the is_delete field as true
+        is_delete: true,
       })
     })
-      .then(response => response.json())
-      .then(data => {
-        // Remove the file from the files state
-        setFiles(prevFiles => prevFiles.filter(file => file.id !== itemId));
-  
-        // Update UI to reflect changes, for example, remove the item from the view
-        setFolders(prevFolders => prevFolders.filter(folder => folder.id !== itemId));
-        console.log('Item moved to trash:', data);
-      })
-      .catch(error => {
-        console.error('Error moving item to trash:', error);
-      });
+    .then(response => {
+      if (response.ok) {
+        // Remove the file or folder from the state
+        if (id) {
+          setFiles(prevFiles => prevFiles.filter(file => file.id !== id));
+        }
+      } else {
+        throw new Error('Failed to move item to trash');
+      }
+    })
+    .catch(error => {
+      console.error('Error moving item to trash:', error);
+    });
   };
 
   useEffect(() => {
@@ -105,6 +107,8 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
       .then((response) => response.json())
       .then((data) => {
         setFiles(data);
+        console.log(data)
+        
       });
   }, [userId]);
 
@@ -118,8 +122,8 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
     setEditFolder(e.target.value);
   };
 
-  const handleSaveClick = (id) => {
-    fetch(`http://127.0.0.1:5555/filefolder/${id}`, {
+  const handleSaveClick = (myfileId) => {
+    fetch(`http://127.0.0.1:5555/filefolder/${myfileId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -129,7 +133,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
       .then(response => response.json())
       .then(data => {
         setFolders(prevFolders => prevFolders.map(folder =>
-          folder.id === id ? data : folder
+          folder.id === myfileId ? data : folder
         ));
         console.log('Folder updated:', data);
       })
@@ -289,14 +293,17 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
         </div>
         :
         <div className='flex  overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
-          <div className='flex w-full items-center justify-between'>
-            <h1 className='ml-[80px]'>Name</h1>
-            <h1>File type</h1>
-            <h1 className='mr-[120px]'>Size</h1></div>
+
+          <div className='flex w-full items-center mb-6 justify-between'>
+          <h1 className='ml-[30px]'>File</h1>
+            <h1 className='ml-[200px]'>Name</h1>
+            <h1 className='ml-[110px]'>File type</h1>
+            <h1 className='mr-[30px]'>Controls</h1></div>
           {files.map(file => (
             <div key={file.id} className='flex text-sm mb-5 justify-between  items-center w-full'>
               <img src='/src/assets/file.png' className='w-[30px] ml-6 h-[30px]' />
               <h1 className='ml-4'>{file.filename}</h1>
+              <h1 className='ml-2'>{file.file_type}</h1>
               <SlOptionsVertical onClick={() => toggleFileOptions(file.id)} size={15} className='mr-[50px] text-sm cursor-pointer' />
               {fileOptions && selectedFileId === file.id && (
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} cursor-pointer ml-[700px] shadow-md mt-[50px] p-5 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[50px] flex justify-center`}>

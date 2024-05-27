@@ -110,14 +110,14 @@ const App = () => {
                 <Route path="/" element={<Home darkMode={darkMode} toggleMode={toggleMode} handleUpload={handleUpload}/>} />
                 <Route path="/new" element={<New darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
                 <Route path="/profile" element={<Profile userId={userId} darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode} ImageUrl={cloudinaryRes}/> } />
-                <Route path="/recent" element={<Recent />} />
-                <Route path='/share' element={<Shares />} />
+                <Route path="/recent" element={<Recent darkMode={darkMode} />} />
+                <Route path='/share' element={<Shares darkMode={darkMode} />} />
                 <Route path="/search" element={<SearchBar />} />
                 <Route path="/trash" element={<Trash darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
-                <Route path="/storage" element={<Storage handleUpload={handleUpload}/>} />
+                <Route path="/storage" element={<Storage handleUpload={handleUpload} darkMode={darkMode} />} />
                 <Route path="/starred" element={<Starred darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/shared" element={<Shared />} />
+                <Route path="/shared" element={<Shared darkMode={darkMode} />} />
                 <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} darkMode={darkMode} toggleMode={toggleMode} fileUrl={cloudinaryRes} />} />
               </Routes>
             </div>

@@ -498,21 +498,18 @@ api.add_resource(SharesPost, "/shares")
 
 
 class StarredItems(Resource):
-    def get(self):
-        starred_items= [starred.to_dict() for starred in StarredItem.query.all()]
+    def get(self, is_starred):
+        starred_items= [starred.to_dict() for starred in Files.query.filter(File.is_starred==0).all()]
         return make_response(starred_items,200)
     
     def post(self):
         data =  request.get_json()
-        
-       
         
         try:
             starred_item = StarredItem(
                 file_id = data.get("file_id"),
                 item_type = data.get("item_type"),
                 user_id = data.get("user_id")
-                
             )  
             db.session.add(starred_item)
             db.session.commit() 
@@ -525,7 +522,7 @@ class StarredItems(Resource):
 api.add_resource(StarredItems,"/starreditems")   
 
 class StarredItemByID(Resource):
-   def delete(self,id):
+   def delete(self, id):
         starred_item = StarredItem.query.filter(StarredItem.id==id).first()
 
         if starred_item:

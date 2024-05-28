@@ -89,7 +89,7 @@ class StarredItem(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     file_id = db.Column(db.Integer, db.ForeignKey('files.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Define the foreign key relationship
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  
     item_type = db.Column(db.String(50), nullable=False) 
     file = db.relationship('File', foreign_keys=[file_id])
     user = db.relationship('User', foreign_keys=[user_id])   

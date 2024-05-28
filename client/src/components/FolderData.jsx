@@ -78,7 +78,7 @@ const FolderData = ({ handleUpload, fileUrl, darkMode, toggleMode }) => {
                 </div>
             ) : (
                 <div className='flex w-full items-center flex-col'>
-                    <img src='/src/assets/empty.png' className='w-[300px] h-[300px]' alt='No files' />
+                    <img src='/public/empty.png' className='w-[300px] h-[300px]' alt='No files' />
                     <h1 className='font-bold mt-7'>Nothing here yet!</h1>
                     <h1 className='text-sm'>Upload to view files specific to this folder.</h1>
                 </div>

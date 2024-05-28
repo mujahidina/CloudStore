@@ -9,8 +9,9 @@ import { CgProfile } from "react-icons/cg";
 const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
   const [profile, setProfile] = useState(null);
   const [userProfile, setUserProfile] = useState(false);
-  const [userProfileData, setUserProfileData] = useState(null);
   const [search, setSearch] = useState("");
+  const [items, setItems] = useState([]); // Original items
+  const [filteredItems, setFilteredItems] = useState([]); // Filtered items based on search
 
   const userId = sessionStorage.getItem('userId');
   const token = sessionStorage.getItem('token');
@@ -41,15 +42,35 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
       });
   }, [userId]);
 
+  useEffect(() => {
+    fetch(`http://127.0.0.1:5555/files`)
+      .then(response => response.json())
+      .then(data => {
+        setItems(data);
+        setFilteredItems(data); // Initialize filtered items with all items
+      })
+      .catch(err => console.log(err));
+  }, []);
+
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
-    setSearch(e.target.value);
+    const searchTerm = e.target.value;
+    setSearch(searchTerm);
+
+    if (searchTerm.trim() === "") {
+      setFilteredItems(items); // Reset filtered items if search is cleared
+    } else {
+      const filtered = items.filter(item => 
+        item.filename.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredItems(filtered);
+    }
   }
 
   return (
     <div className='flex w-full gap-5 items-center'>
-      <form className={`flex items-center mt-3 text-lg shadow-sm p-3 ${darkMode ? 'dark-mode3' : 'light-mode3'} rounded-full w-[600px]`}>
+      <form onSubmit={(e) => e.preventDefault()} className={`flex items-center mt-3 text-lg shadow-sm p-3 ${darkMode ? 'dark-mode3' : 'light-mode3'} rounded-full w-[600px]`}>
         <IoIosSearch size={20} className='ml-3' />
         <input 
           type='text' 
@@ -59,13 +80,25 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
           className={`outline-none ml-5 ${darkMode ? 'dark-mode3' : 'light-mode3'}`} 
         />
       </form>
+      
+      {filteredItems.length > 0 && (
+        <div className={`absolute top-16 left-0 mt-2 w-[600px] p-2 ${darkMode ? 'dark-mode3' : 'light-mode3'} rounded-lg shadow-lg`}>
+          <ul>
+            {filteredItems.map((item, index) => (
+              <li key={index} className='p-2 hover:bg-gray-200'>
+                {item.filename}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
       <button className='flex items-center justify-center mt-3 ml-12' onClick={toggleMode}>
         {darkMode ? <CiLight size={25} /> : <MdDarkMode size={25} />}
       </button>
       
       <div onClick={toggleProfile} className={`ml-[65px] h-[50px] cursor-pointer shadow-sm mt-3 border rounded-lg p-3 w-[230px] flex items-center justify-center ${darkMode ? 'dark-mode3' : 'light-mode'}`}>
         <button className='flex '>
-
           {profile && profile.image_url ? (
             <div className='flex items-center'>
              <h1 className='mr-2'>{profile.email}</h1> 

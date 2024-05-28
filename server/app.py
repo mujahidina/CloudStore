@@ -5,8 +5,8 @@ from models import db, User, File, Folder,Share,StarredItem,TrashItem
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token,unset_jwt_cookies
 from flask_cors import CORS, cross_origin
 from flask_bcrypt import Bcrypt
-from cloudinary.uploader import upload
-from cloudinary.utils import cloudinary_url
+# from cloudinary.uploader import upload
+# from cloudinary.utils import cloudinary_url
 
 
 
@@ -14,8 +14,14 @@ app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cloudstore.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+
+app.json.compact = False
+
+app.secret_key = 'secret key'
+app.config['JWT_SECRET_KEY'] = "b'\x03\xa3\x8c\xb3\n\xf4\x16aFh\xc5'"
+
 db.init_app(app)
+
 migrate = Migrate(app, db)
 api = Api(app)
 jwt = JWTManager(app)
@@ -26,9 +32,10 @@ class UserRegister(Resource):
     @cross_origin()
     def post (self):
         data = request.get_json()
+        print(data)
         username = data.get("username")
         email = data.get("email")
-        password = data.get("password")
+        password = str(data.get("password"))
         image_url = data.get("image_url")
         
         
@@ -64,7 +71,8 @@ class UserRegister(Resource):
         return jsonify({
             "id":"new_user.id",
             "username":"new_user.username",
-            "access_token":access_token
+            "access_token":access_token,
+            "token":access_token
             
         })
         
@@ -94,7 +102,8 @@ class UserLogin(Resource):
         return jsonify({
             "id": user.id,
             "email": user.email,
-            "access_token": user.access_token, 
+            "access_token": user.access_token,
+            "username": user.username,
             "image_url":user.image_url
         
         })
@@ -142,7 +151,7 @@ class UserByID(Resource):
         db.session.add(user)
         db.session.commit()
 
-        return make_response(user.to_dict(only=("id","email","image_url","username","files","folders",)),200)
+        return make_response(user.to_dict(only=("id","email","username","files","folders",)),200)
 
     def delete(self,id):
 
@@ -180,14 +189,22 @@ class Folders(Resource):
 api.add_resource(Folders,"/folders")     
 
 class FolderByUser(Resource):
+    def get(self, id):
+        folders = [folder.to_dict(only=("id", "folder_name", "user_id", "user.username")) for folder in Folder.query.filter(Folder.user_id == id,Folder.is_delete == 0)]
+
+        return make_response(folders, 200)
     
-    def get(self,id):
-        folders = [folder.to_dict(only=("id","folder_name","user_id","user.username")) for folder in Folder.query.filter(Folder.user_id==id)]       
-        
-        return make_response(folders,200)
     
-   
-api.add_resource(FolderByUser,"/foldersuser/<int:id>")
+
+api.add_resource(FolderByUser, "/foldersuser/<int:id>")
+
+class TrashFolders(Resource):
+    def get(self, id):
+        folders = [folder.to_dict(only=("id", "folder_name", "user_id", "user.username")) for folder in Folder.query.filter(Folder.user_id == id,Folder.is_delete == 1)]
+
+        return make_response(folders, 200)
+
+api.add_resource(TrashFolders, "/trashfolders/<int:id>")
 
 class FolderByID(Resource):
     
@@ -280,12 +297,11 @@ api.add_resource(FolderByID,"/folders/<int:id>")
 
 class Files(Resource):
     
-    @cross_origin()
+    
     def post(self):
         data = request.get_json()
         
-        # Handle file upload to Cloudinary
-        # uploaded_file = upload(data.get('file'))  # Assuming the file is in the 'file' field of the JSON payload
+        # Handle file upload to Cloudin  # Assuming the file is in the 'file' field of the JSON payload
         
         try:
             new_file = File(
@@ -302,7 +318,7 @@ class Files(Resource):
         except ValueError:
             return make_response(jsonify({"error": ["validation errors"]}))    
         
-        return make_response(new_file.to_dict(only=("filename", "file_type", "user.username", "folder_id", "path", "size", "user_id")), 201)
+        return make_response(new_file.to_dict(only=("filename", "file_type", "user.username", "folder_id", "path", "size", "user_id", "created_at")), 201)
 
     
     
@@ -311,7 +327,7 @@ api.add_resource(Files,"/files")
 
 class FileByFolder(Resource):
     def get(self,id):
-        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.folder_id==id)]
+        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username", "is_delete", "created_at")) for files in File.query.filter(File.folder_id==id)]
                
         
         return make_response(files,200)
@@ -319,13 +335,20 @@ class FileByFolder(Resource):
 api.add_resource(FileByFolder,"/filefolder/<int:id>")    
 
 class FileByUser(Resource):
-    def get(self,id):
-        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.user_id==id)]
-               
-        
-        return make_response(files,200)
-    
-api.add_resource(FileByUser,"/fileuser/<int:id>")    
+    def get(self, id):
+        files = [file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username", "is_delete", "created_at")) for file in File.query.filter(File.user_id == id,File.is_delete==0)]
+
+        return make_response(files, 200)
+
+api.add_resource(FileByUser, "/fileuser/<int:id>")
+
+class TrashFiles(Resource):
+    def get(self, id):
+        files = [file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username")) for file in File.query.filter(File.user_id == id,File.is_delete==1)]
+
+        return make_response(files, 200)
+
+api.add_resource(TrashFiles, "/trashfiles/<int:id>")   
     
  
 class FileByID(Resource):
@@ -338,153 +361,174 @@ class FileByID(Resource):
         else:
             return make_response(jsonify({"error":"Folder not found"}))
         
-    def patch(self,id):
 
-        data = request.get_json()
-
-        file = File.query.filter(File.id==id).first()
-
-        if file:
-            # Update file attributes
-            for attr in data:
-                setattr(file, attr, data.get(attr))
-            
-            # If 'path' is being updated, ensure it's a Cloudinary URL
-            if 'path' in data:
-                # Validate that the URL is a Cloudinary URL
-                if not data['path'].startswith('https://res.cloudinary.com'):
-                    return make_response(jsonify({"error": "Invalid Cloudinary URL"}), 400)
-
-            db.session.commit()
-            return make_response(file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username")), 200)
-        else:
-            return make_response(jsonify({"error": "File not found"}), 404)
+        
     
-    def delete(self,id):
-        file = File.query.filter(File.id==id).first()
+    # def delete(self,id):
+    #     file = File.query.filter(File.id==id).first()
+
+    #     if file:
+    #         # Delete file from Cloudinary if 'path' represents a Cloudinary URL
+    #         if file.path.startswith('https://res.cloudinary.com'):
+    #             # Extract public ID from Cloudinary URL
+    #             public_id = cloudinary_url(file.path)[0]
+    #             # Delete file from Cloudinary
+    #             cloudinary.uploader.destroy(public_id)
+            
+    #         db.session.delete(file)
+    #         db.session.commit()
+    #         return make_response("", 204)
+    #     else:
+    #         return make_response(jsonify({"error": "File not found"}), 404)
+        
+        
+api.add_resource(FileByID,"/files/<int:id>") 
+
+class FileByFilename(Resource):
+    
+    def get(self, filename):
+        
+        file = File.query.filter(File.filename.ilike(f'%{filename}%')).first()
 
         if file:
-            # Delete file from Cloudinary if 'path' represents a Cloudinary URL
-            if file.path.startswith('https://res.cloudinary.com'):
-                # Extract public ID from Cloudinary URL
-                public_id = cloudinary_url(file.path)[0]
-                # Delete file from Cloudinary
-                cloudinary.uploader.destroy(public_id)
-            
-            db.session.delete(file)
-            db.session.commit()
-            return make_response("", 204)
+            return make_response(jsonify(file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username"))), 200)
         else:
             return make_response(jsonify({"error": "File not found"}), 404)
         
-        
-api.add_resource(FileByID,"/files/<int:id>")     
+api.add_resource(FileByFilename, '/file/<string:filename>')
+
+class MoveToTrash(Resource):
+    def put(self, id):
+        file = File.query.get(id)
+        if not file:
+            return {"error": "File not found"}, 404
+
+        file.is_delete = True
+
+        try:
+            db.session.commit()
+            return {"message": "File moved to trash successfully"}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 500
+
+api.add_resource(MoveToTrash, '/move-to-trash/<int:id>')
+
+class DeleteFile(Resource):
+    def delete(self, id):
+        file = File.query.get(id)
+        if not file:
+            return {"error": "File not found"}, 404
+
+        db.session.delete(file)
+        db.session.commit()
+        return {"message": "File deleted successfully"}, 200
+
+api.add_resource(DeleteFile, '/deletefiles/<int:id>')
+
         
 class Shares(Resource):
-    def get(self):
-        shares = [share.to_dict(only=("file.size","file_id","share_type","user_id","shared_with_user_id","user.username")) for share in Share.query.all()]
-        return make_response(shares,200)
-    
-    def post(self):
-        data =  request.get_json()
-        
-       
-        
-        try:
-            new_share = Share(
-                share_type= data.get('share_type'),
-                user_id = data.get('user_id'),
-                shared_with_user_id = data.get("shared_with_user_id"),
-                file_id = data.get("file_id")
-                
-            )  
-            db.session.add(new_share)
-            db.session.commit() 
-            
-        except ValueError:
-            return make_response(jsonify({"error":["validation errors"]}))    
-        
-        return make_response(new_share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username")),201)
-    
-api.add_resource(Shares,"/shares")
+    def get(self, shared_with_user_email):
+        shares = [
+            {
+                'file_id': share.file_id,
+                'share_type': share.share_type,
+                'shared_with_user_email': share.shared_with_user_email,
+                'user_id': share.user_id,
+                'user': {
+                    'email': share.user.email,
+                    'username': share.user.username
+                },
+                'file': {
+                    'size': share.file.size,
+                    'path': share.file.path,
+                    'filename': share.file.filename
+                }
+            }
+            for share in Share.query.filter(Share.shared_with_user_email==shared_with_user_email).all()
+        ]
+        return make_response(jsonify(shares), 200)
 
-class ShareByID(Resource):
-    def get(self,id):
-        share = Share.query.filter(Share.id==id).first()
+api.add_resource(Shares, "/shares/<string:shared_with_user_email>")
 
-        if share:
-            return make_response(jsonify(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username"))),200)
-        else:
-            return make_response(jsonify({"error":"Shares files not found"}))
-        
-    def patch(self,id):
+class SharesPost(Resource):
+        def post(self):
+            data =  request.get_json()
 
-        data = request.get_json()
+            try:
+                new_share = Share(
+                    share_type= data.get('share_type'),
+                    user_id = data.get('user_id'),
+                    shared_with_user_email = data.get("shared_with_user_email"),
+                    file_id = data.get("file_id")
 
-        share = Share.query.filter(Share.id==id).first()
+                )
+                db.session.add(new_share)
+                db.session.commit() 
 
-        for attr in data:
-            setattr(share,attr,data.get(attr))
+            except ValueError:
+                return make_response(jsonify({"error":["validation errors"]}))
 
-        db.session.add(share)
-        db.session.commit()
+            return make_response(new_share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username")),201)
 
-        return make_response(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username")),200) 
-    
-    def delete(self,id):
-        share = Share.query.filter(Share.id==id).first()
-
-        if share:
-            db.session.delete(share)
-            db.session.commit()
-            return make_response("",204)
-        else:
-            return make_response(jsonify({"error":"Shared file not found"}),404)
-        
-        
-api.add_resource(ShareByID,"/shares/<int:id>")     
+api.add_resource(SharesPost, "/shares")     
 
 
 class StarredItems(Resource):
-    def get(self):
-        starred_items= [starred.to_dict() for starred in StarredItem.query.all()]
-        return make_response(starred_items,200)
-    
-    def post(self):
+    def get(self, user_id):
+        starred_items = [
+            {
+                'file_id': starred_item.file_id,
+                'user_id': starred_item.user_id,
+                'user': {
+                    'email': starred_item.user.email,
+                    'username': starred_item.user.username
+                },
+                'file': {
+                    'size': starred_item.file.size,
+                    'path': starred_item.file.path,
+                    'filename': starred_item.file.filename
+                }
+            }
+            for starred_item in StarredItem.query.filter(StarredItem.user_id==user_id).all()
+        ]
+
+        return make_response((starred_items), 200)
+
+api.add_resource(StarredItems,"/starreditems/<int:user_id>")   
+
+class StarredItemsPost(Resource):
+      def post(self):
         data =  request.get_json()
-        
-       
-        
+
         try:
             starred_item = StarredItem(
                 file_id = data.get("file_id"),
                 item_type = data.get("item_type"),
                 user_id = data.get("user_id")
-                
-            )  
+            )
             db.session.add(starred_item)
             db.session.commit() 
-            
-        except ValueError:
-            return make_response(jsonify({"error":["validation errors"]}))    
-        
-        return make_response(starred_item.to_dict(only=("id","file_id","item_type","user_id")),201)
-    
-api.add_resource(StarredItems,"/starreditems")   
 
-class StarredItemByID(Resource):
-   def delete(self,id):
-        starred_item = StarredItem.query.filter(StarredItem.id==id).first()
+        except ValueError:
+            return make_response(jsonify({"error" :["validation errors"]}))
+
+        return make_response(starred_item.to_dict(only=("id","file_id","item_type","user_id")),201)
+api.add_resource(StarredItemsPost,"/starreditems")   
+      
+
+class StarredItemByFileID(Resource):
+   def delete(self, file_id):
+        starred_item = StarredItem.query.filter(StarredItem.file_id == file_id).first()
 
         if starred_item:
             db.session.delete(starred_item)
             db.session.commit()
-            return make_response("",204)
+            return make_response("", 204)
         else:
-            return make_response(jsonify({"error":"Item not found"}),404)
-        
-api.add_resource(StarredItemByID,"/starreditem/<int:id>")    
-
+            return make_response(jsonify({"error": "Item not found"}), 404)
+    
+api.add_resource(StarredItemByFileID, "/starreditem/<int:file_id>")
 class TrashItems(Resource):
     def get(self):
         trash_item = [trash.to_dict() for trash in TrashItem.query.all()]
@@ -498,6 +542,7 @@ class TrashItems(Resource):
         try:
             trash_item = TrashItem(
                 file_id = data.get("file_id"),
+                folder_id = data.get("folder_id"),
                 item_type = data.get("item_type"),
                 user_id = data.get("user_id")
                 

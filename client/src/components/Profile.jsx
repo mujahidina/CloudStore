@@ -54,7 +54,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
   };
 
   const handleSaveChanges = () => {
-    fetch(`http://127.0.0.1:5555/users/${userId}`, {
+    fetch(`http://127.0.0.1:5555/${userId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
         </div>
         <div className='flex w-full items-center justify-center'>
         
-        <form className={`flex w-[160px] mt-5 text-sm  border rounded-lg  ${darkMode ? 'dark-mode4' : 'light-mode'} items-center justify-center`}>
+        <form className={`flex w-[170px] mt-5 text-sm  border rounded-lg  ${darkMode ? 'dark-mode4' : 'light-mode'} items-center justify-center`}>
           <div onClick={handleUpload}  className={`flex cursor-pointer mr-2 ml-2   `}>
             <input
               type='text'
@@ -116,7 +116,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
               type="email"
               value={editedEmail}
               onChange={handleEmailChange}
-              className='w-[200px] p-2 border outline-none rounded-lg'
+              className={`w-[200px] p-2 border outline-none rounded-lg ${darkMode ? 'dark-mode4' : 'light-mode'}`}
             />
           </div>
         ) : (

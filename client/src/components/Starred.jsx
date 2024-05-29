@@ -46,6 +46,7 @@
 // export default Starred
 
 import React, { useState, useEffect } from 'react';
+import { CiStar } from "react-icons/ci";
 
 const Starred = ({  darkMode }) => {
   const [files, setFiles] = useState([]);
@@ -106,16 +107,18 @@ const Starred = ({  darkMode }) => {
       <div className='flex overflow-y-auto flex-col w-full h-full ml-7 mt-5'>
         <div className='flex w-full items-center justify-between'>
       
-          <h1 className='ml-[310px]'>Name</h1>
-          <h1 className='ml-[200px]'>Size</h1>
+          <h1 className='ml-[270px]'>Name</h1>
+          <h1 className='ml-[80px]'>Size</h1>
           <h1 className='mr-[100px]'>Action</h1>
         </div>
         {files.map(file => (
           <div key={file.file_id} className='flex flex-col items-center'>
             <div className='flex p-2 w-full justify-between items-center'>
+
               <img src={file.file && file.file.path ? file.file.path : '/src/assets/file.png'} className='w-[30px] rounded-full h-[30px]' alt={file.file && file.file.filename} />
               <h1 className='ml-[30px]'>{file.file && file.file.filename}</h1>
               <h1 className='ml-[110px]'>{formatSize(file.size || file.file.size)}</h1>
+              <CiStar />
               <button className='mr-[90px] border p-1 rounded-lg' onClick={() => handleUnstar(file.file_id)}>Unstar</button>
             </div>
             <div className='w-full mr-[140px] flex'><hr className='w-full' /></div>

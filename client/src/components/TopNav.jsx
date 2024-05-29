@@ -70,7 +70,7 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
 
   return (
     <div className='flex w-full gap-5 items-center'>
-      <form onSubmit={(e) => e.preventDefault()} className={`flex items-center mt-3 text-lg shadow-sm p-3 ${darkMode ? 'dark-mode3' : 'light-mode3'} rounded-full w-[600px]`}>
+      <form onSubmit={(e) => e.preventDefault()} className={`flex items-center mt-3 text-lg shadow-sm p-3 ${darkMode ? 'dark-mode3' : 'light-mode3'} rounded-full w-full max-w-lg`}>
         <IoIosSearch size={20} className='ml-3' />
         <input 
           type='text' 
@@ -82,7 +82,7 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
       </form>
       
       {filteredItems.length > 0 && (
-        <div className={`absolute top-16 left-0 mt-2 w-[600px] p-2 ${darkMode ? 'dark-mode3' : 'light-mode3'} rounded-lg shadow-lg`}>
+        <div className={`absolute top-16 left-0 mt-2 w-full max-w-lg p-2 ${darkMode ? 'dark-mode3' : 'light-mode3'} rounded-lg shadow-lg`}>
           <ul>
             {filteredItems.map((item, index) => (
               <li key={index} className='p-2 hover:bg-gray-200'>
@@ -97,7 +97,7 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
         {darkMode ? <CiLight size={25} /> : <MdDarkMode size={25} />}
       </button>
       
-      <div onClick={toggleProfile} className={`ml-[65px] h-[50px] cursor-pointer shadow-sm mt-3 border rounded-lg p-3 w-[230px] flex items-center justify-center ${darkMode ? 'dark-mode3' : 'light-mode'}`}>
+      <div onClick={toggleProfile} className={`ml-auto h-[50px] cursor-pointer shadow-sm mt-3 border rounded-lg p-3 w-auto flex items-center justify-center ${darkMode ? 'dark-mode3' : 'light-mode'}`}>
         <button className='flex '>
           {profile && profile.image_url ? (
             <div className='flex items-center'>
@@ -111,7 +111,7 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
       </div>
 
       {userProfile && (
-        <div className={`flex flex-col w-[300px] h-[350px] absolute top-[100px] left-[950px] shadow-sm border rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode3'} p-3`}>
+        <div className={`flex flex-col w-[300px] h-[350px] absolute top-[100px] left-auto right-0 shadow-sm border rounded-xl ${darkMode ? 'dark-mode3' : 'light-mode3'} p-3`}>
           <div className='w-full flex'>
             {profile && <h1 className='flex w-full items-center justify-center ml-7'>{profile.email}</h1>}
             <button onClick={closeButton}>

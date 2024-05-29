@@ -8,6 +8,8 @@ import { FaRegStar } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoIosCloud } from "react-icons/io";
 import New from './New';
+import drive from './public/drive.png'
+
 
 
 
@@ -23,7 +25,7 @@ const SideNav = ({darkMode, toggleMode , handleUpload}) => {
   return (
     <div className='flex fixed ml-3 flex-col items-center w-[200px]'>
       <div className='flex items-center justify-start w-full  text-xl mt-3'>
-        <img src='/public/drive.png' className='w-11 mr-3 h-11'/>
+        <img src={drive} className='w-11 mr-3 h-11'/>
       <h1>
         CloudStore
       </h1>

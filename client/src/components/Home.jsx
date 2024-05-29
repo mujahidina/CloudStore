@@ -298,7 +298,6 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
               {options && selectedFolderId === folder.id && !editFolderId && (
                 <div className={`w-[230px] flex flex-col gap-7 ${darkMode ? 'dark-mode3' : 'light-mode3'} ml-[70px] shadow-md mt-[90px] p-4 absolute rounded-md ${darkMode ? 'dark-mode3' : 'light-mode2'} h-[30px] flex justify-center`}>
                   <div className='flex w-full' onClick={() => handleEditClick(folder.id, folder.folder_name)}><h1 className='flex justify-between w-full'>Rename</h1> <MdOutlineDriveFileRenameOutline /></div>
-               
                 </div>
               )}
             </div>

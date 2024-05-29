@@ -10,7 +10,7 @@ const FolderData = ({ handleUpload, fileUrl, darkMode, toggleMode }) => {
 
     const handleFileUpload = (e) => {
         e.preventDefault();
-        fetch(`http://127.0.0.1:5555/files`, {
+        fetch(`https://cloudstorebackend.onrender.com/files`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const FolderData = ({ handleUpload, fileUrl, darkMode, toggleMode }) => {
     };
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5555/filefolder/${folderId}`)
+        fetch(`https://cloudstorebackend.onrender.com/filefolder/${folderId}`)
         .then(resp => resp.json())
         .then(data => {
             console.log('my files.............', data);

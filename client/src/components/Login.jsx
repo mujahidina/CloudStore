@@ -40,7 +40,7 @@ const Login = ({ handleAuth}) => {
       })
     };
 
-    fetch('http://127.0.0.1:5555/user/login', opts)
+    fetch('https://cloudstorebackend.onrender.com/user/login', opts)
       .then((response) => {
         if (response.ok) {
           console.log(response);

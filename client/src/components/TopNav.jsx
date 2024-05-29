@@ -27,7 +27,7 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`http://127.0.0.1:5555/users/${userId}`)
+    fetch(`https://cloudstorebackend.onrender.com/users/${userId}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch profile');
@@ -43,7 +43,7 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
   }, [userId]);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5555/files`)
+    fetch(`https://cloudstorebackend.onrender.com/files`)
       .then(response => response.json())
       .then(data => {
         setItems(data);

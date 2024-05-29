@@ -10,7 +10,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
   
 
   const handleImageUpload = () => {
-    fetch(`http://127.0.0.1:5555/users/${userId}`, {
+    fetch(`https://cloudstorebackend.onrender.com/users/${userId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
   };
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5555/users/${userId}`)
+    fetch(`https://cloudstorebackend.onrender.com/users/${userId}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch profile');
@@ -54,7 +54,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
   };
 
   const handleSaveChanges = () => {
-    fetch(`http://127.0.0.1:5555/${userId}`, {
+    fetch(`https://cloudstorebackend.onrender.com/${userId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

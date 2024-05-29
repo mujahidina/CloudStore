@@ -6,7 +6,7 @@ const Storage = ({ userEmail, darkMode }) => {
   const userId=sessionStorage.getItem('userId')
 
   useEffect(() => {
-    const url = `http://127.0.0.1:5555/fileuser/${userId}`;
+    const url = `https://cloudstorebackend.onrender.com/fileuser/${userId}`;
     console.log('Fetch URL:', url);
     fetch(url)
       .then((response) => {
@@ -36,7 +36,7 @@ const Storage = ({ userEmail, darkMode }) => {
       return;
     }
   
-    const url = `http://127.0.0.1:5555/shares?shared_with_user_email=${encodeURIComponent(userEmail)}`;
+    const url = `https://cloudstorebackend.onrender.com/shares?shared_with_user_email=${encodeURIComponent(userEmail)}`;
     console.log('Fetch URL:', url);
     
     fetch(url)

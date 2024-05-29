@@ -8,7 +8,7 @@ function Recent({ darkMode }) {
 
   useEffect(() => {
 
-const url = `http://127.0.0.1:5555/fileuser/${userId}`;
+const url = `https://cloudstorebackend.onrender.com/fileuser/${userId}`;
 console.log('Fetch URL:', url);
 
 fetch(url)

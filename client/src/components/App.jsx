@@ -46,7 +46,7 @@ const App = () => {
 
   useEffect(() => {
     // Make an API call to fetch user's email based on userId
-    fetch(`http://127.0.0.1:5555/users/${userId}`)
+    fetch(`https://cloudstorebackend.onrender.com/users/${userId}`)
       .then(response => response.json())
       .then(data => {
         setUserEmail(data.email);

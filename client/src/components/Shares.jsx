@@ -5,7 +5,7 @@ const Shared = ({ userEmail, darkMode }) => {
 
   useEffect(() => {
 
-    const url = `http://127.0.0.1:5555/shares/${userEmail}`;
+    const url = `https://cloudstorebackend.onrender.com/shares/${userEmail}`;
     console.log('Fetch URL:', url);
     
     fetch(url)

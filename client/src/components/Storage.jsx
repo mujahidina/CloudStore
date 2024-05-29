@@ -75,7 +75,7 @@ const Storage = ({ userEmail, darkMode }) => {
   };
 
   return (
-    <div className={`rounded-xl  w-full h-full flex flex-col ${darkMode ? 'dark-mode3' : 'light-mode3'}`}>
+    <div className={`rounded-xl  w-full h-full flex flex-col ${darkMode ? 'dark-mode3' : 'light-mode2'}`}>
       <div className='text-2xl mt-5 ml-9'>
         Storage
       </div>

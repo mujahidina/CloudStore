@@ -33,7 +33,7 @@ const Login = ({ handleAuth}) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username,
+        
         email,
         password
         
@@ -75,13 +75,6 @@ const Login = ({ handleAuth}) => {
           <h1 className="text-sm mt-5">Enter your details</h1>
         </div>
         <form onSubmit={handleSubmit} className="flex mr-6 items-center justify-center w-full h-full flex-col gap-5">
-          <input
-            className="outline-none border border-black p-1.5 rounded-md w-[350px]"
-            type="text"
-            value={username}
-            onChange={handleUsername}
-            placeholder="Username"
-          />
           <input
             className="outline-none border border-black p-1.5 rounded-md w-[350px]"
             type="email"

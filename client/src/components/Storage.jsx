@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import cloud from './public/cloud.png'
 
 const Storage = ({ userEmail, darkMode }) => {
   const [files, setFiles] = useState([]);
@@ -49,7 +50,7 @@ const Storage = ({ userEmail, darkMode }) => {
       .then((data) => {
         console.log('Fetched files:', data);
         setFiles(data);
-        calculateTotalSize(data); // Calculate total size after fetching shared files
+        calculateTotalSize(data); 
       })
       .catch((error) => {
         console.error('Fetch error:', error.message);
@@ -62,7 +63,6 @@ const Storage = ({ userEmail, darkMode }) => {
     const total = files.reduce((acc, file) => acc + (file.size || file.file.size || 0), 0);
     setTotalSize(total);
   };
-  
 
 
 
@@ -82,7 +82,7 @@ const Storage = ({ userEmail, darkMode }) => {
 
       <div className='flex justify-between ml-10'>
         <div className='flex items-center justify-center'>
-          <img src='/public/cloud.png' className='w-[80px] mt-4' alt='Storage icon' />
+          <img src={cloud} className='w-[80px] mt-4' alt='Storage icon' />
           <div className='flex-col font-mono mt-11 ml-5'>
             <h6 className='text-sm'>Total used</h6>
             <h3 className='text-3xl'>{formatSize(totalSize)}</h3>

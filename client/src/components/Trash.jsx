@@ -4,6 +4,7 @@ import { IoGridOutline } from "react-icons/io5";
 import { FaBars, FaRegTrashAlt } from "react-icons/fa";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaTrashRestore } from "react-icons/fa";
+import trash from './public/trash.png'
 
 const Trash = ({ darkMode, toggleMode }) => {
   const [gridView, setGridView] = useState(false);
@@ -103,7 +104,7 @@ const Trash = ({ darkMode, toggleMode }) => {
       </div>
       {isEmpty ? (
         <div>
-          <img src='/public/trash.png' className='w-[300px] h-[300px]' alt="Trash Can"/>
+          <img src={trash} className='w-[300px] h-[300px]' alt="Trash Can"/>
           <div className='flex flex-col w-full mt-5 items-center justify-center'>
             <h1 className='text-xl mb-5'>Nothing in Trash!</h1>
             <h1 className='text-sm'>Move items you don't need to trash. Once you delete them here,</h1>

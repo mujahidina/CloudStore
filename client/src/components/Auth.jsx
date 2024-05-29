@@ -1,13 +1,14 @@
 // import React, { useState } from 'react'
 import { HiBars3 } from "react-icons/hi2";
 import { Link } from 'react-router-dom';
+import drive from './public/drive.png'
 
 
 
 const Auth = () => {
   return (
     <div className='flex items-center  flex-col h-screen w-full bg-slate-100'>
-      <div className='flex items-center  fixed  border-b-gray-500 bg-white shadow-md justify-start h-[70px] w-full   '><button></button><img src="/public/drive.png" alt=' drive logo' className='w-11 ml-7 h-11 '/><h1 className='text-xl text-gray-500'><span className='text-gray-600 hover:text-black'>Cloud</span>Store</h1></div>
+      <div className='flex items-center  fixed  border-b-gray-500 bg-white shadow-md justify-start h-[70px] w-full   '><button></button><img src={drive} alt=' drive logo' className='w-11 ml-7 h-11 '/><h1 className='text-xl text-gray-500'><span className='text-gray-600 hover:text-black'>Cloud</span>Store</h1></div>
       {/* <div className='w-full flex '><hr className='fle w-full'/></div> */}
       <div className=" w-[1000px] mt-[100px] h-[400px] shadow-md rounded-xl bg-white">
       <div className=' mt-[50px] flex items-center justify-center text-5xl'>

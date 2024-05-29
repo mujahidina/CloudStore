@@ -3,7 +3,7 @@
     "builds": [
       {
         "src": "package.json",
-        "use": "@vercel/node" // Adjust if you are using a different framework or build type
+        "use": "@vercel/node" 
       }
     ],
     "rewrites": [

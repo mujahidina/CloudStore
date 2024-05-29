@@ -1,5 +1,16 @@
 {
-    "rewrites":[
-        {"source":"/(.*)", "destination": "/"}
+    "version": 2,
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/node" // Adjust if you are using a different framework or build type
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/"
+      }
     ]
-}
+  }
+  

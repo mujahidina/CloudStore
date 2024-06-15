@@ -16,7 +16,7 @@ const New = ({ darkMode, handleUpload, fileUrl}) => {
 
   const handleFileUpload = (e) => {
     e.preventDefault();
-    fetch(`https://cloudstorebackend.onrender.com/files`, {
+    fetch(`http://127.0.0.1:5555/files`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const New = ({ darkMode, handleUpload, fileUrl}) => {
       })
     };
 
-    fetch(`https://cloudstorebackend.onrender.com/folders`, opts)
+    fetch(`http://127.0.0.1:5555/folders`, opts)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to create folder');

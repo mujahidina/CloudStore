@@ -17,6 +17,21 @@ import Signup from './Signup';
 import Login from './Login';
 import FolderData from './FolderData';
 import Shares from './Shares';
+import RoomManager from './RoomManager';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import io from "socket.io-client";
+import JoiCreateRoom from './JoinCreateRoom';
+
+const server = "http://localhost:5000";
+const connectionOptions = {
+  "force new connection": true,
+  reconnectionAttempts: "Infinity",
+  timeout: 10000,
+  transports: ["websocket"],
+};
+
+const socket = io(server, connectionOptions);
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -26,7 +41,7 @@ const App = () => {
 
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
-  const userId=sessionStorage.getItem('userId')
+  const userId = sessionStorage.getItem('userId');
 
   useEffect(() => {
     cloudinaryRef.current = window.cloudinary;
@@ -37,15 +52,11 @@ const App = () => {
       if (!error && result && result.event === "success") {
         console.log('File uploaded successfully: ', result.info);
         setCloudinaryRes(result.info);
-        // thenUpload(result.info); // You need to define thenUpload function or remove this call if not needed
       }
     });
   }, []);
 
-  //get email
-
   useEffect(() => {
-    // Make an API call to fetch user's email based on userId
     fetch(`https://cloudstorebackend.onrender.com/users/${userId}`)
       .then(response => response.json())
       .then(data => {
@@ -70,12 +81,7 @@ const App = () => {
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     const userId = sessionStorage.getItem('userId');
-
-    if (token && userId) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
+    setIsAuthenticated(!!(token && userId));
   }, []);
 
   const toggleMode = () => {
@@ -111,7 +117,10 @@ const App = () => {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/shared" element={<Shared darkMode={darkMode} userEmail={userEmail}/>} />
                 <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} darkMode={darkMode} toggleMode={toggleMode} fileUrl={cloudinaryRes} />} />
+                <Route path="/room" element={<RoomManager socket={socket} />} />
+                <Route path="/joincreateroom" element={<JoiCreateRoom/>} />
               </Routes>
+              <ToastContainer />
             </div>
           </div>
         </div>

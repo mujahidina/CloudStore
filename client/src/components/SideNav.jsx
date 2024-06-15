@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaPlus } from "react-icons/fa6";
-import { IoHome } from "react-icons/io5";
+import { IoHome, IoPeople } from "react-icons/io5";
 import { MdPeopleAlt } from "react-icons/md";
 import { CiClock2 } from "react-icons/ci";
 import { FaRegStar } from "react-icons/fa";
@@ -42,6 +42,9 @@ const SideNav = ({darkMode, toggleMode , handleUpload}) => {
          <div className=' justify-start w-full '><Link className='navbar p-3 flex cursor-pointer items-center' to="/"><IoHome size={20} className='mr-4 '/>Home</Link></div> 
          <div className='justify-start w-full '><Link className="navbar p-3 flex cursor-pointer items-center" to="/shared"><MdPeopleAlt size={20} className='mr-4 '/>Shared with me</Link></div> 
          <div className='justify-start w-full '><Link className="navbar p-3 flex cursor-pointer items-center" to="/recent"><CiClock2 size={20} className='mr-4 '/>Recent</Link></div> 
+
+         <div className='justify-start w-full '><Link className="navbar p-3 flex cursor-pointer items-center" to="/room"><IoPeople size={20} className='mr-4 '/>Rooms</Link></div> 
+        
         
          
          <div className='justify-start w-full '><Link className='navbar p-3 flex cursor-pointer items-center' to="/starred"><FaRegStar size={20} className='mr-4'/>Starred</Link></div> 

@@ -9,7 +9,7 @@ const Login = ({ handleAuth}) => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
-  // const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
  
 
   const handleEmail = (e) => {
@@ -41,7 +41,7 @@ const Login = ({ handleAuth}) => {
       })
     };
 
-    fetch('https://cloudstorebackend.onrender.com/user/login', opts)
+    fetch('http://127.0.0.1:5555/user/login', opts)
       .then((response) => {
         if (response.ok) {
           console.log(response);

@@ -1,0 +1,24 @@
+/* src/components/SubscriptionBell.css */
+
+/* .subscription-bell-container {
+    display: flex;
+    
+  
+    width: 100%;
+  }
+  
+   .subscription-bell {
+    display: flex;
+  
+    padding: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    margin-top: 0px;
+  } 
+  
+  .subscription-bell:hover {
+    background-color: #f0f0f0; /* Add a hover effect */
+  
+   
+

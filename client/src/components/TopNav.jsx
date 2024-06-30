@@ -5,6 +5,7 @@ import { CiLight } from "react-icons/ci";
 import { FiLogOut } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
+import SubscriptionBell from './SubscriptionBell';
 
 const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
   const [profile, setProfile] = useState(null);
@@ -27,7 +28,7 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`https://cloudstorebackend.onrender.com/users/${userId}`)
+    fetch(`http://127.0.0.1:5555/users/${userId}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch profile');
@@ -36,17 +37,22 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
       })
       .then(data => {
         setProfile(data);
+      
       })
+      
       .catch(err => {
         console.log(err);
       });
+     
   }, [userId]);
+// console.log(data)
 
   useEffect(() => {
-    fetch(`https://cloudstorebackend.onrender.com/files`)
+    fetch(`http://127.0.0.1:5555/files`)
       .then(response => response.json())
       .then(data => {
         setItems(data);
+        
         setFilteredItems(data); // Initialize filtered items with all items
       })
       .catch(err => console.log(err));
@@ -96,6 +102,10 @@ const TopNav = ({ darkMode, toggleMode, handleLogout, handleUpload }) => {
       <button className='flex items-center justify-center mt-3 ml-12' onClick={toggleMode}>
         {darkMode ? <CiLight size={25} /> : <MdDarkMode size={25} />}
       </button>
+
+      <div className='flex items-center justify-center mt-3 ml-12 ' >
+        <SubscriptionBell/>
+      </div>
       
       <div onClick={toggleProfile} className={`ml-auto h-[50px] cursor-pointer shadow-sm mt-3 border rounded-lg p-3 w-auto flex items-center justify-center ${darkMode ? 'dark-mode3' : 'light-mode'}`}>
         <button className='flex '>

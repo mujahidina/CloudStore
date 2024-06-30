@@ -17,6 +17,10 @@ import Signup from './Signup';
 import Login from './Login';
 import FolderData from './FolderData';
 import Shares from './Shares';
+import SubscriptionBell from './SubscriptionBell';
+import SubscribeModal from './SubscribeModal';
+
+
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -27,6 +31,12 @@ const App = () => {
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
   const userId=sessionStorage.getItem('userId')
+
+  // const [isModalOpen, setModalOpen] = useState(false);
+
+  // const openModal = () => setModalOpen(true);
+  // const closeModal = () => setModalOpen(false);
+
 
   useEffect(() => {
     cloudinaryRef.current = window.cloudinary;
@@ -46,7 +56,7 @@ const App = () => {
 
   useEffect(() => {
     // Make an API call to fetch user's email based on userId
-    fetch(`https://cloudstorebackend.onrender.com/users/${userId}`)
+    fetch(`http://127.0.0.1:5555/users/${userId}`)
       .then(response => response.json())
       .then(data => {
         setUserEmail(data.email);
@@ -102,12 +112,16 @@ const App = () => {
                 <Route path="/" element={<Home darkMode={darkMode} toggleMode={toggleMode} handleUpload={handleUpload}/>} />
                 <Route path="/new" element={<New darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode} fileUrl={cloudinaryRes}/>} />
                 <Route path="/profile" element={<Profile userId={sessionStorage.getItem('userId')} darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode} ImageUrl={cloudinaryRes}/> } />
+                {/* <Route path='/subscribe' element={<SubscribeIcon onClick={openModal} />}/> */}
+                
+
                 <Route path="/recent" element={<Recent darkMode={darkMode} />} />
                 <Route path='/share' element={<Shares darkMode={darkMode} />} />
                 <Route path="/search" element={<SearchBar />} />
                 <Route path="/trash" element={<Trash darkMode={darkMode} handleUpload={handleUpload} toggleMode={toggleMode}/>} />
                 <Route path="/storage" element={<Storage handleUpload={handleUpload} darkMode={darkMode} />} />
                 <Route path="/starred" element={<Starred darkMode={darkMode} toggleMode={toggleMode}/>} />
+                <Route path="/subscribe" element={<SubscriptionBell darkMode={darkMode} toggleMode={toggleMode}/>} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/shared" element={<Shared darkMode={darkMode} userEmail={userEmail}/>} />
                 <Route path='/folderdata/:folderid' element={<FolderData handleUpload={handleUpload} darkMode={darkMode} toggleMode={toggleMode} fileUrl={cloudinaryRes} />} />

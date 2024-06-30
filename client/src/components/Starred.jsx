@@ -54,7 +54,7 @@ const Starred = ({  darkMode }) => {
   
 
   useEffect(() => {
-    const url = `https://cloudstorebackend.onrender.com/starreditems/${userId}`;
+    const url = `http://127.0.0.1:5555/starreditems/${userId}`;
     console.log('Fetch URL:', url);
 
     fetch(url)
@@ -74,7 +74,7 @@ const Starred = ({  darkMode }) => {
   }, [userId]);
 
   const handleUnstar = (fileId) => {
-    fetch(`https://cloudstorebackend.onrender.com/starreditem/${fileId}`, {
+    fetch(`http://127.0.0.1:5555/starreditem/${fileId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

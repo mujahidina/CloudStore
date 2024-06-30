@@ -35,7 +35,7 @@ const Signup = ({ handleAuth }) => {
       })
     };
 
-    fetch('https://cloudstorebackend.onrender.com/user/register', opts)
+    fetch('http://127.0.0.1:5555/user/register', opts)
       .then((response) => {
         if (response.ok) {
           return response.json();

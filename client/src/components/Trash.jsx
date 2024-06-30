@@ -32,7 +32,7 @@ const Trash = ({ darkMode, toggleMode }) => {
   };
 
   const handleDelete = (id) => {
-    fetch(`https://cloudstorebackend.onrender.com/deletefiles/${id}`, {
+    fetch(`http://127.0.0.1:5555/deletefiles/${id}`, {
       method: 'DELETE',
     })
     .then(response => {
@@ -52,7 +52,7 @@ const Trash = ({ darkMode, toggleMode }) => {
   };
 
   const handleRestoreTrash = (id) => {
-    const url = `https://cloudstorebackend.onrender.com/move-to-trash/${id}`;
+    const url = `http://127.0.0.1:5555/move-to-trash/${id}`;
 
     fetch(url, {
       method: 'PUT',
@@ -77,7 +77,7 @@ const Trash = ({ darkMode, toggleMode }) => {
   };
 
   useEffect(() => {
-    fetch(`https://cloudstorebackend.onrender.com/trashfiles/${userId}`)
+    fetch(`http://127.0.0.1:5555/trashfiles/${userId}`)
       .then(response => response.json())
       .then(data => {
         setTrashItem(data);

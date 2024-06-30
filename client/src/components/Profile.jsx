@@ -7,10 +7,13 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const userId = sessionStorage.getItem('userId');
   const [imageUpload, setImageUpload] = useState(false);
+
+  
+
   
 
   const handleImageUpload = () => {
-    fetch(`https://cloudstorebackend.onrender.com/users/${userId}`, {
+    fetch(`http://127.0.0.1:5555/users/${userId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -23,13 +26,14 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
     .then(data => {
       setProfile(prevProfile => ({ ...prevProfile, image_url: data.image_url }));
     })
+     console.log("This is the user id",userId)
     .catch(error => {
       console.error('Error uploading image:', error);
     });
   };
-
+  
   useEffect(() => {
-    fetch(`https://cloudstorebackend.onrender.com/users/${userId}`)
+    fetch(`http://127.0.0.1:5555/users/${userId}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch profile');
@@ -54,7 +58,7 @@ const Profile = ({ darkMode, toggleMode, handleUpload, ImageUrl }) => {
   };
 
   const handleSaveChanges = () => {
-    fetch(`https://cloudstorebackend.onrender.com/${userId}`, {
+    fetch(`http://127.0.0.1:5555/${userId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

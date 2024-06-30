@@ -50,7 +50,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
 
     console.log('Starring file with payload:', payload);
 
-    fetch(`https://cloudstorebackend.onrender.com/starreditems`, {
+    fetch(`http://127.0.0.1:5555/starreditems`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
   
     console.log('Payload:', payload);
   
-    fetch(`https://cloudstorebackend.onrender.com/shares`, {
+    fetch(`http://127.0.0.1:5555/shares`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
 
   //handling trash items
   const handleMoveToTrash = (id) => {
-    const url = `https://cloudstorebackend.onrender.com/move-to-trash/${id}`; // Update the endpoint URL
+    const url = `http://127.0.0.1:5555/move-to-trash/${id}`; // Update the endpoint URL
     
     fetch(url, {
       method: 'PUT', // Change the method to PUT
@@ -165,14 +165,14 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
 
   useEffect(() => {
     // Fetch folders
-    fetch(`https://cloudstorebackend.onrender.com/foldersuser/${userId}`)
+    fetch(`http://127.0.0.1:5555/foldersuser/${userId}`)
       .then((response) => response.json())
       .then((data) => {
         setFolders(data);
       });
 
     // Fetch files
-    fetch(`https://cloudstorebackend.onrender.com/fileuser/${userId}`)
+    fetch(`http://127.0.0.1:5555/fileuser/${userId}`)
       .then((response) => response.json())
       .then((data) => {
         setFiles(data);
@@ -192,7 +192,7 @@ const Home = ({ darkMode, toggleMode, handleUpload }) => {
   };
 
   const handleSaveClick = (myfileId) => {
-    fetch(`https://cloudstorebackend.onrender.com/filefolder/${myfileId}`, {
+    fetch(`http://127.0.0.1:5555/filefolder/${myfileId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
